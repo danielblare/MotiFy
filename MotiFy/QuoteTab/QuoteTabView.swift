@@ -10,23 +10,24 @@ import SwiftUI
 @MainActor
 final class QuoteTabViewModel: ObservableObject {
     
-    @Published private(set) var quote: Quote?
+    @Published private(set) var quoteHolder: QuoteHolder?
     
     @Published var alert: AlertData?
-    
+      
     init() {
         if let data = UserDefaults.standard.data(forKey: "quote"),
-           let quote = try? JSONDecoder().decode(Quote.self, from: data) {
-            self.quote = quote
+           let quote = try? JSONDecoder().decode(QuoteHolder.self, from: data) {
+            self.quoteHolder = quote
         }
         
-        guard let quote, Calendar.current.isDateInToday(quote.dataUpdated) else {
+        guard let quoteHolder, Calendar.current.isDateInToday(quoteHolder.dateUpdated) else {
             fetchQuote()
             return
         }
     }
     
     func fetchQuote() {
+        print("Fetching")
         let headers = [
             "X-RapidAPI-Key": "2366186accmsh184e71bf5cce5d0p15ee0djsn01dfff778bdc",
             "X-RapidAPI-Host": "quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com"
@@ -41,9 +42,12 @@ final class QuoteTabViewModel: ObservableObject {
                 let result = try await URLSession.shared.data(for: request)
                 let quote = try JSONDecoder().decode(Quote.self, from: result.0)
                 
-                UserDefaults.standard.setValue(result.0, forKey: "quote")
+                let holder = QuoteHolder(dateUpdated: .now, quote: quote)
                 
-                self.quote = quote
+                let data = try JSONEncoder().encode(holder)
+                UserDefaults.standard.setValue(data, forKey: "quote")
+                
+                self.quoteHolder = holder
                 
             } catch {
                 alert = AlertData(title: "Error while fetching quote", message: error.localizedDescription)
@@ -76,7 +80,7 @@ struct QuoteTabView: View {
     
     private var Quote: some View {
         VStack(alignment: .leading) {
-            if let quote = viewModel.quote {
+            if let quote = viewModel.quoteHolder?.quote {
                 Image(systemName: "quote.opening")
 
                 Text(quote.text)

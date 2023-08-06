@@ -42,7 +42,10 @@ struct TimerTabView: View {
 
     var body: some View {
         VStack {
-            
+            Text("Timer")
+                .font(.title2)
+                .foregroundStyle(.accent)
+
             Group {
                 if showTimer {
                     Text(remainingTime.formatted)

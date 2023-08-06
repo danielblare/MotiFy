@@ -7,25 +7,26 @@
 
 import Foundation
 
+struct QuoteHolder: Codable {
+    let dateUpdated: Date
+    let quote: Quote
+}
+
 struct Quote: Identifiable, Codable {
     var id: UUID
     
     let text: String
     let author: String
-    
-    let dataUpdated: Date
-    
+        
     init(id: UUID = UUID(), text: String, author: String) {
         self.id = id
         self.text = text
         self.author = author
-        self.dataUpdated = .now
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = UUID()
-        self.dataUpdated = .now
+        self.id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
         self.text = try container.decode(String.self, forKey: .text)
         self.author = try container.decode(String.self, forKey: .author)
     }

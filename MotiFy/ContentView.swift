@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        TabView(selection: .constant(2)) {
+        TabView(selection: .constant(1)) {
             QuoteTabView()
                 .tabItem { Image(systemName: "quote.opening") }
             
