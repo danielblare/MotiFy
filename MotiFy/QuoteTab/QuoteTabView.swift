@@ -76,6 +76,9 @@ struct QuoteTabView: View {
             Spacer()
         }
             .padding()
+            .background {
+                FancyBackground()
+            }
     }
     
     private var Quote: some View {

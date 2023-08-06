@@ -14,6 +14,7 @@
 		BB7300EC2A7C45B2006A7020 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB7300EB2A7C45B2006A7020 /* Preview Assets.xcassets */; };
 		BB7300F42A7C474F006A7020 /* QuoteTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7300F32A7C474F006A7020 /* QuoteTabView.swift */; };
 		BB7300F72A7C5807006A7020 /* LoadingBouncyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7300F62A7C5807006A7020 /* LoadingBouncyView.swift */; };
+		BB9CDAD82A7FA03900E0DD4B /* FancyBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9CDAD72A7FA03900E0DD4B /* FancyBackground.swift */; };
 		BBE2B56A2A7D88F500264BF5 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE2B5692A7D88F500264BF5 /* View.swift */; };
 		BBE2B56D2A7D8BD600264BF5 /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE2B56C2A7D8BD600264BF5 /* Quote.swift */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,7 @@
 		BB7300EB2A7C45B2006A7020 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BB7300F32A7C474F006A7020 /* QuoteTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteTabView.swift; sourceTree = "<group>"; };
 		BB7300F62A7C5807006A7020 /* LoadingBouncyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingBouncyView.swift; sourceTree = "<group>"; };
+		BB9CDAD72A7FA03900E0DD4B /* FancyBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FancyBackground.swift; sourceTree = "<group>"; };
 		BBE2B5692A7D88F500264BF5 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		BBE2B56C2A7D8BD600264BF5 /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				BB7300F62A7C5807006A7020 /* LoadingBouncyView.swift */,
+				BB9CDAD72A7FA03900E0DD4B /* FancyBackground.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB7300F42A7C474F006A7020 /* QuoteTabView.swift in Sources */,
+				BB9CDAD82A7FA03900E0DD4B /* FancyBackground.swift in Sources */,
 				BB5C2EEE2A7E655400CE99BC /* TimerTabView.swift in Sources */,
 				BB7300E72A7C45B0006A7020 /* ContentView.swift in Sources */,
 				BBE2B56A2A7D88F500264BF5 /* View.swift in Sources */,
