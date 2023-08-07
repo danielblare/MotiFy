@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -17,6 +18,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct MotiFyApp: App {
     
     @UIApplicationDelegateAdaptor private var delegate: AppDelegate
+    
+    init() {
+        FirebaseApp.configure()
+    }
     
     var body: some Scene {
         WindowGroup {

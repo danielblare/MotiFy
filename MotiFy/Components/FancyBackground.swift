@@ -14,20 +14,22 @@ struct Meteorite: View {
     let startVelocity: CGPoint
     @State private var position: CGPoint
     @State private var velocity: CGPoint
+    let color: Color
 
-    init(screenSize: CGSize, circleSize: CGFloat) {
+    init(screenSize: CGSize, circleSize: CGFloat, color: Color = .accentColor) {
         self.screenSize = screenSize
         self.circleSize = circleSize
-        self.startPosition = CGPoint(x: -CGFloat.random(in: circleSize/2...10*circleSize), y: -CGFloat.random(in: circleSize/2...10*circleSize))
+        self.startPosition = CGPoint(x: CGFloat.random(in: 0...screenSize.width), y: CGFloat.random(in: 0...screenSize.height))
         self.startVelocity = CGPoint(x: CGFloat.random(in: 0.1...1), y: CGFloat.random(in: 0.5...1.5))
         self._position = State(initialValue: startPosition)
         self._velocity = State(initialValue: startVelocity)
+        self.color = color
     }
 
     var body: some View {
         Circle()
             .frame(width: circleSize, height: circleSize)
-            .foregroundColor(.accentColor)
+            .foregroundStyle(color)
             .position(position)
             .onAppear() {
                 self.position = self.startPosition
@@ -45,7 +47,7 @@ struct Meteorite: View {
         )
 
         if newPosition.y - circleSize / 2 > screenSize.height {
-            newPosition = CGPoint(x: -CGFloat.random(in: circleSize/2...10*circleSize), y: -CGFloat.random(in: circleSize/2...10*circleSize))
+            newPosition = CGPoint(x: -CGFloat.random(in: 0...screenSize.width/2), y: -CGFloat.random(in: 0...screenSize.height/2))
             velocity = CGPoint(x: CGFloat.random(in: 0.1...2), y: CGFloat.random(in: 0.5...1.5))
         }
 
@@ -60,7 +62,8 @@ struct FancyBackground: View {
     var body: some View {
         ZStack {
             ForEach(0..<25) { _ in
-                Meteorite(screenSize: screenSize, circleSize: circleSize)
+                let randomColor = Color.palette.colorSet.randomElement() ?? .accentColor
+                Meteorite(screenSize: screenSize, circleSize: circleSize, color: randomColor)
                     .opacity(Double.random(in: 0.1...0.8))
             }
         }

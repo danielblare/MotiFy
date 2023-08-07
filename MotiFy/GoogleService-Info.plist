@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>57306657538-oigc3rf4hege32nnpjnbdb9vin7o1qee.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.57306657538-oigc3rf4hege32nnpjnbdb9vin7o1qee</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBLX04rhElnBndw_3zcamnu7CibWSMelO8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>57306657538</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.stuffeddanny.MotiFy</string>
+	<key>PROJECT_ID</key>
+	<string>motify-f7252</string>
+	<key>STORAGE_BUCKET</key>
+	<string>motify-f7252.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:57306657538:ios:7267d020fbd87dae31081b</string>
+</dict>
+</plist>

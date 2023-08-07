@@ -99,11 +99,20 @@ struct TimerTabView: View {
             }
             .buttonStyle(.bordered)
             .padding()
+            .animation(nil, value: showTimer)
+            .animation(nil, value: isTimerRunning)
 
             Spacer()
         }
         .padding()
         .animation(.bouncy, value: showTimer)
+        .background {
+            if isTimerRunning {
+                FancyBackground()
+                    .blur(radius: 3)
+            }
+        }
+        .animation(.bouncy, value: isTimerRunning)
     }
     
     private func startTimer() {
@@ -154,4 +163,8 @@ struct TimerTabView: View {
 
 #Preview {
     TimerTabView()
+        .background {
+            FancyBackground()
+                .blur(radius: 3)
+        }
 }

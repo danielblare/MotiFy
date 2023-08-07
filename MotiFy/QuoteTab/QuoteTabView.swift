@@ -72,12 +72,13 @@ struct QuoteTabView: View {
             Spacer()
             
             Quote
-            
+
             Spacer()
         }
             .padding()
             .background {
                 FancyBackground()
+                    .blur(radius: 3)
             }
     }
     

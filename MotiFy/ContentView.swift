@@ -9,15 +9,14 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        TabView(selection: .constant(1)) {
+        TabView {
             QuoteTabView()
                 .tabItem { Image(systemName: "quote.opening") }
             
             TimerTabView()
-                .tag(2)
                 .tabItem { Image(systemName: "timer") }
             
-            Text("Music")
+            MusicTabView()
                 .tabItem { Image(systemName: "music.note") }
         }
     }
