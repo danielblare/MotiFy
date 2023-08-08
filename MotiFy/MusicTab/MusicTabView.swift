@@ -8,81 +8,9 @@
 import AVKit
 import SwiftUI
 
-struct Track: Codable, Identifiable {
-    let id: String
-    let title: String
-    let genre: String
-    let audio: URL
-    let artwork: URL
-    let description: String
-    
-    init(from model: FirestoreTrackModel) async throws {
-        let manager = StorageManager()
-        self.id = model.id
-        self.title = model.title
-        self.genre = model.genre
-        self.description = model.description
-        self.audio = try await manager.get(from: model.audio)
-        self.artwork = try await manager.get(from: model.artwork)
-    }
-}
-
-@MainActor
-final class MusicTabViewModel: ObservableObject {
-    
-    private var player = AVPlayer()
-    @Published private(set) var trackPlaying: Track.ID?
-    
-    @Published private(set) var tracks: [Track] = []
-    
-    @Published private(set) var isPlaying: Bool = false
-    
-    init() {
-        if let data = UserDefaults.standard.data(forKey: "tracks"),
-           let tracks = try? JSONDecoder().decode([Track].self, from: data) {
-            self.tracks = tracks
-            print(tracks)
-        }
-        Task {
-            if let trackModels = try? await FirestoreManager.shared.getTracks() {
-
-                var tracks: [Track] = []
-                
-                for model in trackModels {
-                    if let track = try? await Track(from: model) {
-                        tracks.append(track)
-                    }
-                }
-                self.tracks = tracks
-                
-                if let data = try? JSONEncoder().encode(tracks) {
-                    UserDefaults.standard.setValue(data, forKey: "tracks")
-                }
-            }
-        }
-    }
-    
-    func play(_ track: Track) {
-        let playerItem = AVPlayerItem(url: track.audio)
-        player.replaceCurrentItem(with: playerItem)
-        play()
-        trackPlaying = track.id
-    }
-    
-    func play() {
-        player.play()
-        isPlaying = true
-    }
-    
-    func pause() {
-        player.pause()
-        isPlaying = false
-    }
-}
-
 struct MusicTabView: View {
     @StateObject private var viewModel = MusicTabViewModel()
-    
+    @State private var showSheet: Bool = true
     
     var body: some View {
         NavigationStack {
@@ -128,6 +56,7 @@ struct MusicTabView: View {
                                 Text(track.genre)
                                     .foregroundStyle(.secondary)
                             }
+                            .lineLimit(1)
                         }
                         .animation(.easeOut, value: viewModel.isPlaying)
                     }
@@ -135,10 +64,191 @@ struct MusicTabView: View {
             }
             .navigationTitle("Library")
             .listStyle(.inset)
+            .overlay(alignment: .bottom) {
+
+                if let trackID = viewModel.trackPlaying, let track = viewModel.getTrack(by: trackID) {
+                    HStack {
+                        
+                        AsyncImage(url: track.artwork) { image in
+                            image
+                                .resizable()
+                        } placeholder: {
+                            Image("artwork")
+                                .resizable()
+                        }
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        
+                        VStack(alignment: .leading) {
+                            Text(track.title)
+                            
+                            Text(track.genre)
+                                .foregroundStyle(.secondary)
+                        }
+                        .lineLimit(1)
+                        
+                        Spacer(minLength: 0)
+                        
+                        HStack {
+                            Button {
+                                
+                            } label: {
+                                Image(systemName: "backward.end.fill")
+                                    .foregroundStyle(Color.primary)
+                            }
+                            
+                            Button {
+                                viewModel.isPlaying ? viewModel.pause() : viewModel.play()
+                            } label: {
+                                let color: Color = .accentColor
+                                ZStack(alignment: .center) {
+                                    Circle()
+                                        .fill(color)
+                                    
+                                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                                        .foregroundStyle(color.contrastingTextColor())
+                                        .padding([.leading, .bottom], viewModel.isPlaying ? 0 : 1)
+                                }
+                                .frame(width: 40, height: 40, alignment: .center)
+                            }
+                            
+                            Button {
+                                
+                            } label: {
+                                Image(systemName: "forward.end.fill")
+                                    .foregroundStyle(Color.primary)
+                            }
+                            
+                        }
+                        .padding(.leading)
+                        .animation(.bouncy, value: viewModel.isPlaying)
+                    }
+                    
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .overlay(alignment: .top) {
+                            //                            ZStack(alignment: .top) {
+                            //                                Rectangle()
+                            //                                    .fill(.secondary.opacity(0.3))
+                            //                                    .frame(height: 4)
+                            //
+                            //                                HStack(alignment: .top, spacing: 0) {
+                            //                                    Rectangle()
+                            //                                        .fill(.secondary)
+                            //                                        .frame(height: 4)
+                            //
+                            //                                    UnevenRoundedRectangle(bottomLeadingRadius: 1, bottomTrailingRadius: 1)
+                            //                                        .frame(width: 3, height: 7)
+                            //
+                            //                                }
+                            //                                .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
+                            //                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            //                            }
+                            ZStack(alignment: .top) {
+                                Rectangle()
+                                    .fill(.secondary.opacity(0.3))
+                                
+                                GeometryReader { proxy in
+                                    
+                                    Rectangle()
+                                        .fill(.secondary)
+                                    
+                                        .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                            }
+                            .frame(height: 4)
+                            .animation(.linear, value: viewModel.currentTime)
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .onTapGesture {
+                        showSheet = true
+                    }
+                }
+            }
+            .sheet(isPresented: $showSheet) {
+                if let trackID = viewModel.trackPlaying, let track = viewModel.getTrack(by: trackID) {
+                    VStack {
+                        AsyncImage(url: track.artwork) { image in
+                            image
+                                .resizable()
+                        } placeholder: {
+                            Image("artwork")
+                                .resizable()
+                        }
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .padding()
+                        
+                        VStack {
+                            Text(track.title)
+                                .font(.title)
+                                .fontWeight(.semibold)
+                            
+                            Text(track.genre)
+                                .foregroundStyle(.secondary)
+                                .font(.title3)
+                        }
+                        .lineLimit(1)
+                        .padding(.horizontal)
+                        
+                        VStack {
+                            ZStack(alignment: .leading) {
+                                Rectangle()
+                                    .fill(.secondary.opacity(0.3))
+                                
+                                GeometryReader { proxy in
+                                    Rectangle()
+                                        .fill(.secondary)
+                                        .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
+                                }
+                            }
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                            .frame(height: 5)
+                            .animation(.linear, value: viewModel.currentTime)
+
+                            let totalCurrentSeconds = Int(viewModel.currentTime.seconds)
+                            let currentMinutes = totalCurrentSeconds / 60
+                            let currentSeconds = totalCurrentSeconds % 60
+                            
+                            let totalSecondsLeft = Int(track.duration.seconds) - totalCurrentSeconds
+                            let minutesLeft = totalSecondsLeft / 60
+                            let secondsLeft = totalSecondsLeft % 60
+
+                            HStack {
+                                Text(String(format: "%01d:%02d", currentMinutes, currentSeconds))
+                                
+                                Spacer(minLength: 0)
+                                
+                                Text(String(format: "-%01d:%02d", minutesLeft, secondsLeft))
+                            }
+                            .foregroundStyle(.secondary)
+                            .font(.footnote)
+
+                        }
+                        .padding()
+                        
+                        
+                        
+                        Spacer(minLength: 0)
+                    }
+                    .padding()
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
+                }
+
+            }
         }
     }
 }
 
 #Preview {
-    MusicTabView()
+    TabView {
+        MusicTabView()
+            .tabItem {
+                Image(systemName: "note")
+            }
+    }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB31BCA52A82A76C007DBF67 /* CMTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB31BCA42A82A76C007DBF67 /* CMTime.swift */; };
 		BB3428CE2A8112B200243DDA /* MusicTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3428CD2A8112B200243DDA /* MusicTabView.swift */; };
 		BB3563C82A814E7800D56250 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB3563C72A814E7800D56250 /* GoogleService-Info.plist */; };
 		BB3563CB2A814EC100D56250 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = BB3563CA2A814EC100D56250 /* FirebaseFirestore */; };
@@ -28,9 +29,11 @@
 		BBA191472A7FCD3400B01E46 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA191462A7FCD3400B01E46 /* Color.swift */; };
 		BBE2B56A2A7D88F500264BF5 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE2B5692A7D88F500264BF5 /* View.swift */; };
 		BBE2B56D2A7D8BD600264BF5 /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE2B56C2A7D8BD600264BF5 /* Quote.swift */; };
+		BBF38DD42A82718E009EE1A8 /* MusicTabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF38DD32A82718E009EE1A8 /* MusicTabViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB31BCA42A82A76C007DBF67 /* CMTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTime.swift; sourceTree = "<group>"; };
 		BB3428CD2A8112B200243DDA /* MusicTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabView.swift; sourceTree = "<group>"; };
 		BB3563C72A814E7800D56250 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BB3563D52A81508D00D56250 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
@@ -48,6 +51,7 @@
 		BBA191462A7FCD3400B01E46 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		BBE2B5692A7D88F500264BF5 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		BBE2B56C2A7D8BD600264BF5 /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
+		BBF38DD32A82718E009EE1A8 /* MusicTabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				BB3428CD2A8112B200243DDA /* MusicTabView.swift */,
+				BBF38DD32A82718E009EE1A8 /* MusicTabViewModel.swift */,
 			);
 			path = MusicTab;
 			sourceTree = "<group>";
@@ -157,6 +162,7 @@
 			children = (
 				BBE2B5692A7D88F500264BF5 /* View.swift */,
 				BBA191462A7FCD3400B01E46 /* Color.swift */,
+				BB31BCA42A82A76C007DBF67 /* CMTime.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -260,8 +266,10 @@
 				BBE2B56A2A7D88F500264BF5 /* View.swift in Sources */,
 				BB7300E52A7C45B0006A7020 /* MotiFyApp.swift in Sources */,
 				BBE2B56D2A7D8BD600264BF5 /* Quote.swift in Sources */,
+				BBF38DD42A82718E009EE1A8 /* MusicTabViewModel.swift in Sources */,
 				BB3563DA2A81686B00D56250 /* MusicPlayingAnimation.swift in Sources */,
 				BB7300F72A7C5807006A7020 /* LoadingBouncyView.swift in Sources */,
+				BB31BCA52A82A76C007DBF67 /* CMTime.swift in Sources */,
 				BB3563D62A81508D00D56250 /* FirestoreManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

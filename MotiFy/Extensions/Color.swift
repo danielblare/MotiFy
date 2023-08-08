@@ -23,3 +23,30 @@ extension Color {
         }
     }
 }
+
+extension Color {
+    
+    /// Returns white or black depending on which one is more contrasting to self
+    func contrastingTextColor() -> Color {
+        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+        UIColor(self).getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        let brightness = ((red * 299) + (green * 587) + (blue * 114)) / 1000
+        return brightness < 0.5 ? .white : .black
+    }
+    
+    func colorComponents() throws -> (red: Double, green: Double, blue: Double, alpha: Double) {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        
+        guard UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a) else { throw ColorError.cannotConvert }
+        
+        return (r, g, b, a)
+    }
+    
+    enum ColorError: Error {
+        /// Indicates that Color cannot be convertible to the RGB space
+        case cannotConvert
+    }
+}
