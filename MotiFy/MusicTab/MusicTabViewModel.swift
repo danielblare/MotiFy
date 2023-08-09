@@ -27,8 +27,7 @@ struct Track: Codable, Identifiable {
         self.duration = duration
     }
     
-    init(from model: FirestoreTrackModel) async throws {
-        let manager = StorageManager()
+    init(from model: FirestoreTrackModel, storageManager manager: StorageManager) async throws {
         self.id = model.id
         self.title = model.title
         self.genre = model.genre
@@ -46,13 +45,13 @@ final class MusicTabViewModel: ObservableObject {
     
     private var player: AVPlayer
     
-    private var trackPlayingID: Track.ID? = "yKjoNS0o5YkgFSIADjPF"
+    private var trackPlayingID: Track.ID? = "DHA4WlsFJMJCfCK1DTu3"
     
     var trackPlaying: Track? {
         self.tracks.first(where: { $0.id == trackPlayingID })
     }
     
-    @Published private(set) var tracks: [Track] = []
+    @Published private(set) var tracks: [Track] = [.init(id: "DHA4WlsFJMJCfCK1DTu3", title: "Title", genre: "Genre", audio: URL(string: "https://youtu.be/T_ASKLftsLs")!, artwork: URL(string: "https://lelolobi.com/wp-content/uploads/2021/11/Test-Logo-Small-Black-transparent-1-1.png")!, description: "Description", duration: CMTime(seconds: 60 * 59, preferredTimescale: 600))]
     
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var currentTime: CMTime = .zero
@@ -66,27 +65,27 @@ final class MusicTabViewModel: ObservableObject {
             }
         }
         
-        if let data = UserDefaults.standard.data(forKey: "tracks"),
-           let tracks = try? JSONDecoder().decode([Track].self, from: data) {
-            self.tracks = tracks
-        }
-        Task {
-            if let trackModels = try? await dependencies.firestoreManager.getTracks() {
-
-                var tracks: [Track] = []
-                
-                for model in trackModels {
-                    if let track = try? await Track(from: model) {
-                        tracks.append(track)
-                    }
-                }
-                self.tracks = tracks
-                
-                if let data = try? JSONEncoder().encode(tracks) {
-                    UserDefaults.standard.setValue(data, forKey: "tracks")
-                }
-            }
-        }
+//        if let data = UserDefaults.standard.data(forKey: "tracks"),
+//           let tracks = try? JSONDecoder().decode([Track].self, from: data) {
+//            self.tracks = tracks
+//        }
+//        Task {
+//            if let trackModels = try? await dependencies.firestoreManager.getTracks() {
+//
+//                var tracks: [Track] = []
+//                
+//                for model in trackModels {
+//                    if let track = try? await Track(from: model, storageManager: dependencies.storageManager) {
+//                        tracks.append(track)
+//                    }
+//                }
+//                self.tracks = tracks
+//                
+//                if let data = try? JSONEncoder().encode(tracks) {
+//                    UserDefaults.standard.setValue(data, forKey: "tracks")
+//                }
+//            }
+//        }
     }
         
     func play(_ track: Track) {

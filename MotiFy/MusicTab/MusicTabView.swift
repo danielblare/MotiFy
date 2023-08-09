@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MusicTabView: View {
     @StateObject private var viewModel: MusicTabViewModel
-    @State private var showSheet: Bool = false
+    @State private var showSheet: Bool = true
     
     private let dependencies: Dependencies
     
@@ -176,20 +176,19 @@ struct MusicTabView: View {
                             .frame(height: 5)
                             .animation(.linear, value: viewModel.currentTime)
                             
+                            let totalHours = Int(track.duration.seconds) / 3600
+                            let format: Format = totalHours >= 1 ? .hours : .minutes
+                            
                             let totalCurrentSeconds = Int(viewModel.currentTime.seconds)
-                            let currentMinutes = totalCurrentSeconds / 60
-                            let currentSeconds = totalCurrentSeconds % 60
                             
                             let totalSecondsLeft = Int(track.duration.seconds) - totalCurrentSeconds
-                            let minutesLeft = totalSecondsLeft / 60
-                            let secondsLeft = totalSecondsLeft % 60
                             
                             HStack {
-                                Text(String(format: "%01d:%02d", currentMinutes, currentSeconds))
+                                Text(formattedDuration(seconds: totalCurrentSeconds, format: format))
                                 
                                 Spacer(minLength: 0)
                                 
-                                Text(String(format: "-%01d:%02d", minutesLeft, secondsLeft))
+                                Text("-" + formattedDuration(seconds: totalSecondsLeft, format: format))
                             }
                             .foregroundStyle(.secondary)
                             .font(.footnote)
@@ -246,7 +245,31 @@ struct MusicTabView: View {
         }
     }
     
-    func playPause() {
+    enum Format {
+        case hours
+        case minutes
+        
+        var stringFormat: String {
+            switch self {
+            case .hours:
+                "%01d:%02d:%02d"
+            case .minutes:
+                "%01d:%02d"
+            }
+        }
+    }
+    
+    func formattedDuration(seconds: Int, format: Format) -> String {
+        let hours = seconds / 3600
+        let minutes = (seconds / 60) % 60
+        let seconds = seconds % 60
+        
+        var arguments: [CVarArg] = [minutes, seconds]
+        if format == .hours {
+            arguments.insert(hours, at: 0)
+        }
+        
+        return String(format: format.stringFormat, arguments: arguments)
         
     }
 }
