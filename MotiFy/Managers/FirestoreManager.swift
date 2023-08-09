@@ -17,14 +17,12 @@ struct FirestoreTrackModel: Codable {
     let audio: String
     let artwork: String
     let description: String
+    
+    static let testInstance = FirestoreTrackModel(id: "yKjoNS0o5YkgFSIADjPF", title: "Test Title", genre: "Test genge", audio: "gs://motify-f7252.appspot.com/MorningMudd/audio.mp3", artwork: "gs://motify-f7252.appspot.com/MorningMudd/artwork.png", description: "Test description")
 }
 
 
 final actor FirestoreManager {
-    
-    static let shared = FirestoreManager()
-    
-    private init() {}
     
     private let database = Firestore.firestore()
     

@@ -17,6 +17,16 @@ struct Track: Codable, Identifiable {
     let description: String
     let duration: CMTime
     
+    init(id: String, title: String, genre: String, audio: URL, artwork: URL, description: String, duration: CMTime) {
+        self.id = id
+        self.title = title
+        self.genre = genre
+        self.audio = audio
+        self.artwork = artwork
+        self.description = description
+        self.duration = duration
+    }
+    
     init(from model: FirestoreTrackModel) async throws {
         let manager = StorageManager()
         self.id = model.id
@@ -27,6 +37,8 @@ struct Track: Codable, Identifiable {
         self.artwork = try await manager.get(from: model.artwork)
         self.duration = try await AVURLAsset(url: audio).load(.duration)
     }
+    
+    static let testInstance = Track(id: "yKjoNS0o5YkgFSIADjPF", title: "Test Title", genre: "Test genge", audio: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/motify-f7252.appspot.com/o/MorningMudd%2Faudio.mp3?alt=media&token=88b7a262-7df0-4c9e-b435-cea18a6f22ec")!, artwork: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/motify-f7252.appspot.com/o/MorningMudd%2Fartwork.png?alt=media&token=654a8ea0-5a02-48e7-924c-083a48b48918")!, description: "Test description", duration: CMTime(seconds: 60, preferredTimescale: 600))
 }
 
 @MainActor
@@ -34,14 +46,18 @@ final class MusicTabViewModel: ObservableObject {
     
     private var player: AVPlayer
     
-    @Published private(set) var trackPlaying: Track.ID?// = "yKjoNS0o5YkgFSIADjPF"
+    private var trackPlayingID: Track.ID? = "yKjoNS0o5YkgFSIADjPF"
+    
+    var trackPlaying: Track? {
+        self.tracks.first(where: { $0.id == trackPlayingID })
+    }
     
     @Published private(set) var tracks: [Track] = []
     
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var currentTime: CMTime = .zero
     
-    init() {
+    init(with dependencies: Dependencies) {
         self.player = AVPlayer()
         
         self.player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: .main) { time in
@@ -55,7 +71,7 @@ final class MusicTabViewModel: ObservableObject {
             self.tracks = tracks
         }
         Task {
-            if let trackModels = try? await FirestoreManager.shared.getTracks() {
+            if let trackModels = try? await dependencies.firestoreManager.getTracks() {
 
                 var tracks: [Track] = []
                 
@@ -72,15 +88,14 @@ final class MusicTabViewModel: ObservableObject {
             }
         }
     }
-    
+        
     func play(_ track: Track) {
-        let playerItem = AVPlayerItem(url: track.audio)
-        player.replaceCurrentItem(with: playerItem)
-        trackPlaying = track.id
-        play()
-    }
-    
-    func play() {
+        if player.currentItem == nil || trackPlayingID != track.id {
+            let asset = AVAsset(url: track.audio)
+            let playerItem = AVPlayerItem(asset: asset)
+            player.replaceCurrentItem(with: playerItem)
+        }
+        trackPlayingID = track.id
         player.play()
         isPlaying = true
     }
@@ -88,9 +103,5 @@ final class MusicTabViewModel: ObservableObject {
     func pause() {
         player.pause()
         isPlaying = false
-    }
-    
-    func getTrack(by id: Track.ID) -> Track? {
-        self.tracks.first(where: { $0.id == id })
     }
 }

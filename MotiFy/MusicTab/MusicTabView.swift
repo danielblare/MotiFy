@@ -9,44 +9,41 @@ import AVKit
 import SwiftUI
 
 struct MusicTabView: View {
-    @StateObject private var viewModel = MusicTabViewModel()
-    @State private var showSheet: Bool = true
+    @StateObject private var viewModel: MusicTabViewModel
+    @State private var showSheet: Bool = false
+    
+    private let dependencies: Dependencies
+    
+    init(with dependencies: Dependencies) {
+        self._viewModel = .init(wrappedValue: MusicTabViewModel(with: dependencies))
+        self.dependencies = dependencies
+    }
     
     var body: some View {
         NavigationStack {
             List {
                 ForEach(viewModel.tracks) { track in
                     Button {
-                        if viewModel.trackPlaying == track.id, viewModel.isPlaying {
+                        if viewModel.trackPlaying?.id == track.id, viewModel.isPlaying {
                             viewModel.pause()
                         } else {
-                            if viewModel.trackPlaying == track.id {
-                                viewModel.play()
-                            } else {
-                                viewModel.play(track)
-                            }
+                            viewModel.play(track)
                         }
                     } label: {
                         HStack {
                             
-                            AsyncImage(url: track.artwork) { image in
-                                image
-                                    .resizable()
-                            } placeholder: {
-                                Image("artwork")
-                                    .resizable()
-                            }
-                            .scaledToFit()
-                            .frame(width: 60, height: 60)
-                            .overlay {
-                                if viewModel.trackPlaying == track.id {
-                                    MusicPlayingAnimation(playing: viewModel.isPlaying, spacing: 3, cornerRadius: 2)
-                                        .padding()
-                                        .background(.ultraThinMaterial.opacity(0.5))
-                                        .foregroundStyle(.gray)
+                            ArtworkView(with: dependencies, for: track)
+                                .scaledToFit()
+                                .frame(width: 60, height: 60)
+                                .overlay {
+                                    if viewModel.trackPlaying?.id == track.id {
+                                        MusicPlayingAnimation(playing: viewModel.isPlaying, spacing: 3, cornerRadius: 2)
+                                            .padding()
+                                            .background(.ultraThinMaterial.opacity(0.5))
+                                            .foregroundStyle(.gray)
+                                    }
                                 }
-                            }
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
                             
                             
                             
@@ -65,20 +62,14 @@ struct MusicTabView: View {
             .navigationTitle("Library")
             .listStyle(.inset)
             .overlay(alignment: .bottom) {
-
-                if let trackID = viewModel.trackPlaying, let track = viewModel.getTrack(by: trackID) {
+                
+                if let track = viewModel.trackPlaying {
                     HStack {
                         
-                        AsyncImage(url: track.artwork) { image in
-                            image
-                                .resizable()
-                        } placeholder: {
-                            Image("artwork")
-                                .resizable()
-                        }
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        ArtworkView(with: dependencies, for: track)
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
                         
                         VStack(alignment: .leading) {
                             Text(track.title)
@@ -99,7 +90,7 @@ struct MusicTabView: View {
                             }
                             
                             Button {
-                                viewModel.isPlaying ? viewModel.pause() : viewModel.play()
+                                viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
                             } label: {
                                 let color: Color = .accentColor
                                 ZStack(alignment: .center) {
@@ -122,45 +113,27 @@ struct MusicTabView: View {
                             
                         }
                         .padding(.leading)
-                        .animation(.bouncy, value: viewModel.isPlaying)
                     }
                     
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(.ultraThinMaterial)
                     .overlay(alignment: .top) {
-                            //                            ZStack(alignment: .top) {
-                            //                                Rectangle()
-                            //                                    .fill(.secondary.opacity(0.3))
-                            //                                    .frame(height: 4)
-                            //
-                            //                                HStack(alignment: .top, spacing: 0) {
-                            //                                    Rectangle()
-                            //                                        .fill(.secondary)
-                            //                                        .frame(height: 4)
-                            //
-                            //                                    UnevenRoundedRectangle(bottomLeadingRadius: 1, bottomTrailingRadius: 1)
-                            //                                        .frame(width: 3, height: 7)
-                            //
-                            //                                }
-                            //                                .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
-                            //                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            //                            }
-                            ZStack(alignment: .top) {
-                                Rectangle()
-                                    .fill(.secondary.opacity(0.3))
+                        ZStack(alignment: .top) {
+                            Rectangle()
+                                .fill(.secondary.opacity(0.3))
+                            
+                            GeometryReader { proxy in
                                 
-                                GeometryReader { proxy in
-                                    
-                                    Rectangle()
-                                        .fill(.secondary)
-                                    
-                                        .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                }
+                                Rectangle()
+                                    .fill(.secondary)
+                                
+                                    .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
-                            .frame(height: 4)
-                            .animation(.linear, value: viewModel.currentTime)
+                        }
+                        .frame(height: 4)
+                        .animation(.linear, value: viewModel.currentTime)
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .onTapGesture {
@@ -169,18 +142,12 @@ struct MusicTabView: View {
                 }
             }
             .sheet(isPresented: $showSheet) {
-                if let trackID = viewModel.trackPlaying, let track = viewModel.getTrack(by: trackID) {
+                if let track = viewModel.trackPlaying {
                     VStack {
-                        AsyncImage(url: track.artwork) { image in
-                            image
-                                .resizable()
-                        } placeholder: {
-                            Image("artwork")
-                                .resizable()
-                        }
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .padding()
+                        ArtworkView(with: dependencies, for: track)
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .padding()
                         
                         VStack {
                             Text(track.title)
@@ -208,7 +175,7 @@ struct MusicTabView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 5))
                             .frame(height: 5)
                             .animation(.linear, value: viewModel.currentTime)
-
+                            
                             let totalCurrentSeconds = Int(viewModel.currentTime.seconds)
                             let currentMinutes = totalCurrentSeconds / 60
                             let currentSeconds = totalCurrentSeconds % 60
@@ -216,7 +183,7 @@ struct MusicTabView: View {
                             let totalSecondsLeft = Int(track.duration.seconds) - totalCurrentSeconds
                             let minutesLeft = totalSecondsLeft / 60
                             let secondsLeft = totalSecondsLeft % 60
-
+                            
                             HStack {
                                 Text(String(format: "%01d:%02d", currentMinutes, currentSeconds))
                                 
@@ -226,11 +193,47 @@ struct MusicTabView: View {
                             }
                             .foregroundStyle(.secondary)
                             .font(.footnote)
-
+                            .padding(.horizontal, 5)
+                            
                         }
                         .padding()
                         
-                        
+                        HStack {
+                            Button {
+                                
+                            } label: {
+                                Image(systemName: "backward.end.fill")
+                                    .foregroundStyle(Color.primary)
+                                    .imageScale(.large)
+                            }
+                            
+                            Button {
+                                viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
+                            } label: {
+                                let color: Color = .accentColor
+                                ZStack(alignment: .center) {
+                                    Circle()
+                                        .fill(color)
+                                    
+                                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                                        .resizable()
+                                        .foregroundStyle(color.contrastingTextColor())
+                                        .padding(20)
+                                        .padding(.leading, viewModel.isPlaying ? 0 : 5)
+                                }
+                                .frame(width: 70, height: 70)
+                            }
+                            .padding(.horizontal)
+                            
+                            Button {
+                                
+                            } label: {
+                                Image(systemName: "forward.end.fill")
+                                    .foregroundStyle(Color.primary)
+                                    .imageScale(.large)
+                            }
+                            
+                        }
                         
                         Spacer(minLength: 0)
                     }
@@ -238,15 +241,19 @@ struct MusicTabView: View {
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
                 }
-
+                
             }
         }
+    }
+    
+    func playPause() {
+        
     }
 }
 
 #Preview {
     TabView {
-        MusicTabView()
+        MusicTabView(with: .testInstance)
             .tabItem {
                 Image(systemName: "note")
             }

@@ -8,6 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    private let dependencies: Dependencies
+    
+    init(with dependencies: Dependencies) {
+        self.dependencies = dependencies
+    }
+    
     var body: some View {
         TabView {
             QuoteTabView()
@@ -16,12 +22,12 @@ struct ContentView: View {
             TimerTabView()
                 .tabItem { Image(systemName: "timer") }
             
-            MusicTabView()
+            MusicTabView(with: dependencies)
                 .tabItem { Image(systemName: "music.note") }
         }
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(with: .testInstance)
 }
