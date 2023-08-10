@@ -53,7 +53,7 @@ final class MusicTabViewModel: ObservableObject {
                     UserDefaults.standard.setValue(data, forKey: "tracks")
                 }
             } catch {
-                
+                print(error)
             }
         }
     }
