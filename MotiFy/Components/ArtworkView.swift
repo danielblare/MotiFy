@@ -15,19 +15,17 @@ final class ArtworkViewModel: ObservableObject {
     init(with dependencies: Dependencies, for track: Track) {
         let manager = dependencies.cacheManager
         
-        self.image = manager.getFrom(manager.artWorkCache, forKey: track.id)
-        
-        Task {
-            if let data = try? await URLSession.shared.data(from: track.artwork).0,
-               let image = UIImage(data: data),
-               self.image != image {
-                
-                self.image = image
-                manager.addTo(manager.artWorkCache, forKey: track.id, value: image)
-                
+        if let savedImage = manager.getFrom(manager.artWorkCache, forKey: track.id) {
+            self.image = savedImage
+        } else {
+            Task {
+                if let data = try? await URLSession.shared.data(from: track.artwork).0,
+                   let image = UIImage(data: data) {
+                    manager.addTo(manager.artWorkCache, forKey: track.id, value: image)
+                    self.image = image
+                }
             }
         }
-        
     }
 }
 
@@ -51,6 +49,6 @@ struct ArtworkView: View {
 }
 
 #Preview {
-    ArtworkView(with: .testInstance, for: .testInstance)
+    ArtworkView(with: .testInstance, for: .offlineInstance)
         .frame(width: 200, height: 200)
 }

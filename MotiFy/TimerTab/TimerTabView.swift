@@ -50,6 +50,7 @@ struct TimerTabView: View {
                 if showTimer {
                     Text(remainingTime.formatted)
                         .font(.system(size: 70))
+                        .monospacedDigit()
                 } else {
                     HStack(spacing: 0) {
                         Picker("Hours", selection: $selectedTime.hours) {

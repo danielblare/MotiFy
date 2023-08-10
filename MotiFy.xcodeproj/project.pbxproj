@@ -19,6 +19,7 @@
 		BB3563D82A815A3C00D56250 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3563D72A815A3C00D56250 /* StorageManager.swift */; };
 		BB3563DA2A81686B00D56250 /* MusicPlayingAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3563D92A81686B00D56250 /* MusicPlayingAnimation.swift */; };
 		BB5C2EEE2A7E655400CE99BC /* TimerTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB5C2EED2A7E655400CE99BC /* TimerTabView.swift */; };
+		BB65B69E2A85350700B37405 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB65B69D2A85350700B37405 /* Track.swift */; };
 		BB7300E52A7C45B0006A7020 /* MotiFyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7300E42A7C45B0006A7020 /* MotiFyApp.swift */; };
 		BB7300E72A7C45B0006A7020 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7300E62A7C45B0006A7020 /* ContentView.swift */; };
 		BB7300E92A7C45B2006A7020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB7300E82A7C45B2006A7020 /* Assets.xcassets */; };
@@ -42,6 +43,7 @@
 		BB3563D72A815A3C00D56250 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		BB3563D92A81686B00D56250 /* MusicPlayingAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayingAnimation.swift; sourceTree = "<group>"; };
 		BB5C2EED2A7E655400CE99BC /* TimerTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTabView.swift; sourceTree = "<group>"; };
+		BB65B69D2A85350700B37405 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		BB7300E12A7C45B0006A7020 /* MotiFy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotiFy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB7300E42A7C45B0006A7020 /* MotiFyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotiFyApp.swift; sourceTree = "<group>"; };
 		BB7300E62A7C45B0006A7020 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				BBE2B56C2A7D8BD600264BF5 /* Quote.swift */,
+				BB65B69D2A85350700B37405 /* Track.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 				BB3428CE2A8112B200243DDA /* MusicTabView.swift in Sources */,
 				BB3563D82A815A3C00D56250 /* StorageManager.swift in Sources */,
 				BB5C2EEE2A7E655400CE99BC /* TimerTabView.swift in Sources */,
+				BB65B69E2A85350700B37405 /* Track.swift in Sources */,
 				BBA191472A7FCD3400B01E46 /* Color.swift in Sources */,
 				BB7300E72A7C45B0006A7020 /* ContentView.swift in Sources */,
 				BBE2B56A2A7D88F500264BF5 /* View.swift in Sources */,

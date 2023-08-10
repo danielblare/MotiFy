@@ -22,230 +22,240 @@ struct MusicTabView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(viewModel.tracks) { track in
-                    Button {
-                        if viewModel.trackPlaying?.id == track.id, viewModel.isPlaying {
-                            viewModel.pause()
-                        } else {
-                            viewModel.play(track)
-                        }
-                    } label: {
-                        HStack {
-                            
-                            ArtworkView(with: dependencies, for: track)
-                                .scaledToFit()
-                                .frame(width: 60, height: 60)
-                                .overlay {
-                                    if viewModel.trackPlaying?.id == track.id {
-                                        MusicPlayingAnimation(playing: viewModel.isPlaying, spacing: 3, cornerRadius: 2)
-                                            .padding()
-                                            .background(.ultraThinMaterial.opacity(0.5))
-                                            .foregroundStyle(.gray)
-                                    }
-                                }
-                                .clipShape(RoundedRectangle(cornerRadius: 5))
-                            
-                            
-                            
-                            VStack(alignment: .leading) {
-                                Text(track.title)
-                                
-                                Text(track.genre)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .lineLimit(1)
-                        }
-                        .animation(.easeOut, value: viewModel.isPlaying)
-                    }
+                ForEach(viewModel.tracks) {
+                    TrackRow(for: $0)
                 }
             }
             .navigationTitle("Library")
             .listStyle(.inset)
             .overlay(alignment: .bottom) {
-                
                 if let track = viewModel.trackPlaying {
-                    HStack {
-                        
-                        ArtworkView(with: dependencies, for: track)
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                        
-                        VStack(alignment: .leading) {
-                            Text(track.title)
-                            
-                            Text(track.genre)
-                                .foregroundStyle(.secondary)
-                        }
-                        .lineLimit(1)
-                        
-                        Spacer(minLength: 0)
-                        
-                        HStack {
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: "backward.end.fill")
-                                    .foregroundStyle(Color.primary)
-                            }
-                            
-                            Button {
-                                viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
-                            } label: {
-                                let color: Color = .accentColor
-                                ZStack(alignment: .center) {
-                                    Circle()
-                                        .fill(color)
-                                    
-                                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                                        .foregroundStyle(color.contrastingTextColor())
-                                        .padding([.leading, .bottom], viewModel.isPlaying ? 0 : 1)
-                                }
-                                .frame(width: 40, height: 40, alignment: .center)
-                            }
-                            
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: "forward.end.fill")
-                                    .foregroundStyle(Color.primary)
-                            }
-                            
-                        }
-                        .padding(.leading)
-                    }
-                    
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(.ultraThinMaterial)
-                    .overlay(alignment: .top) {
-                        ZStack(alignment: .top) {
-                            Rectangle()
-                                .fill(.secondary.opacity(0.3))
-                            
-                            GeometryReader { proxy in
-                                
-                                Rectangle()
-                                    .fill(.secondary)
-                                
-                                    .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                        }
-                        .frame(height: 4)
-                        .animation(.linear, value: viewModel.currentTime)
-                    }
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .onTapGesture {
-                        showSheet = true
-                    }
+                    SmallPlayer(for: track)
                 }
             }
             .sheet(isPresented: $showSheet) {
                 if let track = viewModel.trackPlaying {
-                    VStack {
-                        ArtworkView(with: dependencies, for: track)
-                            .scaledToFit()
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .padding()
-                        
-                        VStack {
-                            Text(track.title)
-                                .font(.title)
-                                .fontWeight(.semibold)
-                            
-                            Text(track.genre)
-                                .foregroundStyle(.secondary)
-                                .font(.title3)
-                        }
-                        .lineLimit(1)
-                        .padding(.horizontal)
-                        
-                        VStack {
-                            ZStack(alignment: .leading) {
-                                Rectangle()
-                                    .fill(.secondary.opacity(0.3))
-                                
-                                GeometryReader { proxy in
-                                    Rectangle()
-                                        .fill(.secondary)
-                                        .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
-                                }
-                            }
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                            .frame(height: 5)
-                            .animation(.linear, value: viewModel.currentTime)
-                            
-                            let totalHours = Int(track.duration.seconds) / 3600
-                            let format: Format = totalHours >= 1 ? .hours : .minutes
-                            
-                            let totalCurrentSeconds = Int(viewModel.currentTime.seconds)
-                            
-                            let totalSecondsLeft = Int(track.duration.seconds) - totalCurrentSeconds
-                            
-                            HStack {
-                                Text(formattedDuration(seconds: totalCurrentSeconds, format: format))
-                                
-                                Spacer(minLength: 0)
-                                
-                                Text("-" + formattedDuration(seconds: totalSecondsLeft, format: format))
-                            }
-                            .foregroundStyle(.secondary)
-                            .font(.footnote)
-                            .padding(.horizontal, 5)
-                            
-                        }
-                        .padding()
-                        
-                        HStack {
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: "backward.end.fill")
-                                    .foregroundStyle(Color.primary)
-                                    .imageScale(.large)
-                            }
-                            
-                            Button {
-                                viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
-                            } label: {
-                                let color: Color = .accentColor
-                                ZStack(alignment: .center) {
-                                    Circle()
-                                        .fill(color)
-                                    
-                                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                                        .resizable()
-                                        .foregroundStyle(color.contrastingTextColor())
-                                        .padding(20)
-                                        .padding(.leading, viewModel.isPlaying ? 0 : 5)
-                                }
-                                .frame(width: 70, height: 70)
-                            }
-                            .padding(.horizontal)
-                            
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: "forward.end.fill")
-                                    .foregroundStyle(Color.primary)
-                                    .imageScale(.large)
-                            }
-                            
-                        }
-                        
-                        Spacer(minLength: 0)
-                    }
-                    .padding()
-                    .presentationDetents([.large])
-                    .presentationDragIndicator(.visible)
+                    FullScreenPlayer(for: track)
+                        .presentationDetents([.large])
+                        .presentationDragIndicator(.visible)
                 }
                 
             }
         }
     }
     
-    enum Format {
+    private func FullScreenPlayer(for track: Track) -> some View {
+        VStack {
+            ArtworkView(with: dependencies, for: track)
+                .scaledToFit()
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding()
+            
+            VStack {
+                Text(track.title)
+                    .font(.title)
+                    .fontWeight(.semibold)
+                
+                Text(track.genre)
+                    .foregroundStyle(.secondary)
+                    .font(.title3)
+            }
+            .lineLimit(1)
+            .padding(.horizontal)
+            
+            VStack {
+                ZStack(alignment: .leading) {
+                    Rectangle()
+                        .fill(.secondary.opacity(0.3))
+                    
+                    GeometryReader { proxy in
+                        Rectangle()
+                            .fill(.secondary)
+                            .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
+                    }
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 5))
+                .frame(height: 5)
+                
+                let totalHours = Int(track.duration.seconds) / 3600
+                let format: Format = totalHours >= 1 ? .hours : .minutes
+                
+                let totalCurrentSeconds = Int(viewModel.currentTime.seconds)
+                
+                let totalSecondsLeft = Int(track.duration.seconds) - totalCurrentSeconds
+                
+                HStack {
+                    Text(formattedDuration(seconds: totalCurrentSeconds, format: format))
+                    
+                    Spacer(minLength: 0)
+                    
+                    Text("-" + formattedDuration(seconds: totalSecondsLeft, format: format))
+                }
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+                .font(.footnote)
+                .padding(.horizontal, 5)
+                
+            }
+            .padding()
+            
+            HStack {
+                Button {
+                    viewModel.prev()
+                } label: {
+                    Image(systemName: "backward.fill")
+                        .foregroundStyle(Color.primary)
+                        .imageScale(.large)
+                }
+                
+                Button {
+                    viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
+                } label: {
+                    let color: Color = .accentColor
+                    ZStack(alignment: .center) {
+                        Circle()
+                            .fill(color)
+                        
+                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                            .resizable()
+                            .foregroundStyle(color.contrastingTextColor())
+                            .padding(20)
+                            .padding(.leading, viewModel.isPlaying ? 0 : 5)
+                    }
+                    .frame(width: 70, height: 70)
+                }
+                .padding(.horizontal)
+                
+                Button {
+                    viewModel.next()
+                } label: {
+                    Image(systemName: "forward.fill")
+                        .foregroundStyle(Color.primary)
+                        .imageScale(.large)
+                }
+                
+            }
+            
+            Spacer(minLength: 0)
+            
+        }
+        .padding()
+    }
+    
+    private func SmallPlayer(for track: Track) -> some View {
+        HStack {
+            
+            ArtworkView(with: dependencies, for: track)
+                .scaledToFit()
+                .frame(width: 50, height: 50)
+                .clipShape(RoundedRectangle(cornerRadius: 5))
+            
+            VStack(alignment: .leading) {
+                Text(track.title)
+                
+                Text(track.genre)
+                    .foregroundStyle(.secondary)
+            }
+            .lineLimit(1)
+            
+            Spacer(minLength: 0)
+            
+            HStack {
+                Button {
+                    viewModel.prev()
+                } label: {
+                    Image(systemName: "backward.fill")
+                        .foregroundStyle(Color.primary)
+                }
+                
+                Button {
+                    viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
+                } label: {
+                    let color: Color = .accentColor
+                    ZStack(alignment: .center) {
+                        Circle()
+                            .fill(color)
+                        
+                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                            .foregroundStyle(color.contrastingTextColor())
+                            .padding([.leading, .bottom], viewModel.isPlaying ? 0 : 1)
+                    }
+                    .frame(width: 40, height: 40, alignment: .center)
+                }
+                
+                Button {
+                    viewModel.next()
+                } label: {
+                    Image(systemName: "forward.fill")
+                        .foregroundStyle(Color.primary)
+                }
+                
+            }
+            .padding(.leading)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(.ultraThinMaterial)
+        .overlay(alignment: .top) {
+            ZStack(alignment: .top) {
+                Rectangle()
+                    .fill(.secondary.opacity(0.3))
+                
+                GeometryReader { proxy in
+                    
+                    Rectangle()
+                        .fill(.secondary)
+                    
+                        .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .frame(height: 4)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .onTapGesture {
+            showSheet = true
+        }
+    }
+    
+    private func TrackRow(for track: Track) -> some View {
+        Button {
+            if viewModel.trackPlaying?.id == track.id, viewModel.isPlaying {
+                viewModel.pause()
+            } else {
+                viewModel.play(track)
+            }
+        } label: {
+            HStack {
+                
+                ArtworkView(with: dependencies, for: track)
+                    .scaledToFit()
+                    .frame(width: 60, height: 60)
+                    .overlay {
+                        if viewModel.trackPlaying?.id == track.id {
+                            MusicPlayingAnimation(playing: viewModel.isPlaying, spacing: 3, cornerRadius: 2)
+                                .padding()
+                                .background(.ultraThinMaterial.opacity(0.5))
+                                .foregroundStyle(.gray)
+                        }
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                
+                
+                
+                VStack(alignment: .leading) {
+                    Text(track.title)
+                    
+                    Text(track.genre)
+                        .foregroundStyle(.secondary)
+                }
+                .lineLimit(1)
+            }
+            .animation(.easeOut, value: viewModel.isPlaying)
+        }
+    }
+    
+    private enum Format {
         case hours
         case minutes
         
@@ -259,7 +269,7 @@ struct MusicTabView: View {
         }
     }
     
-    func formattedDuration(seconds: Int, format: Format) -> String {
+    private func formattedDuration(seconds: Int, format: Format) -> String {
         let hours = seconds / 3600
         let minutes = (seconds / 60) % 60
         let seconds = seconds % 60

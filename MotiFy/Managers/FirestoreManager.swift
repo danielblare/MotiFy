@@ -10,29 +10,18 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseFirestoreCombineSwift
 
-struct FirestoreTrackModel: Codable {
-    let id: String
-    let title: String
-    let genre: String
-    let audio: String
-    let artwork: String
-    let description: String
-    
-    static let testInstance = FirestoreTrackModel(id: "yKjoNS0o5YkgFSIADjPF", title: "Test Title", genre: "Test genge", audio: "gs://motify-f7252.appspot.com/MorningMudd/audio.mp3", artwork: "gs://motify-f7252.appspot.com/MorningMudd/artwork.png", description: "Test description")
-}
-
-
 final actor FirestoreManager {
     
     private let database = Firestore.firestore()
     
-    func getTracks() async throws -> [FirestoreTrackModel] {
-        try await database
-            .collection("tracks")
-            .getDocuments()
-            .documents
-            .map({ try $0.data(as: FirestoreTrackModel.self) })
+    func get<T: Decodable>() async throws -> T {
+        switch T.self {
+        case is [FirestoreTrackModel].Type:
+            return try await database
+                .collection("tracks")
+                .getDocuments()
+                .documents.map({ try $0.data(as: FirestoreTrackModel.self) }) as! T
+        default: throw FirestoreErrorCode(.unimplemented)
+        }
     }
-    
-    
 }
