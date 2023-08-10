@@ -10,7 +10,8 @@ import SwiftUI
 
 struct MusicTabView: View {
     @StateObject private var viewModel: MusicTabViewModel
-    @State private var showSheet: Bool = true
+    @State private var showFullScreenPlayer: Bool = true
+    @State private var trackForDescription: Track?
     
     private let dependencies: Dependencies
     
@@ -33,7 +34,12 @@ struct MusicTabView: View {
                     SmallPlayer(for: track)
                 }
             }
-            .sheet(isPresented: $showSheet) {
+            .sheet(item: $trackForDescription) { track in
+                Description(for: track)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.hidden)
+            }
+            .sheet(isPresented: $showFullScreenPlayer) {
                 if let track = viewModel.trackPlaying {
                     FullScreenPlayer(for: track)
                         .presentationDetents([.large])
@@ -41,6 +47,60 @@ struct MusicTabView: View {
                 }
                 
             }
+        }
+    }
+    
+    private func Description(for track: Track) -> some View {
+        GeometryReader { proxy in
+            ScrollView {
+                ArtworkView(with: dependencies, for: track)
+                    .scaledToFill()
+                    .frame(height: proxy.size.height * 0.4)
+                    .clipped()
+                
+                VStack(alignment: .leading) {
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(track.title)
+                                .font(.title)
+                                .fontWeight(.semibold)
+                            
+                            Text(track.genre)
+                                .foregroundStyle(.secondary)
+                        }
+                        .lineLimit(1)
+                        
+                        Spacer()
+                        
+                        Button {
+                            viewModel.play(track)
+                            trackForDescription = nil
+                        } label: {
+                            let accent: Color = .accentColor
+                            HStack {
+                                Text("Play")
+                                    .fontWeight(.bold)
+                                    .font(.title3)
+                                Image(systemName: "play.fill")
+                            }
+                            .foregroundStyle(accent.contrastingTextColor())
+                            .padding(10)
+                            .background(accent)
+                            .clipShape(Capsule())
+                        }
+                    }
+                    
+                    Text("Description:")
+                        .textCase(.uppercase)
+                        .foregroundStyle(.secondary)
+                        .padding(.top)
+                    
+                    Text(track.description)
+                }
+                .padding()
+            }
+            .scrollIndicators(.hidden)
         }
     }
     
@@ -214,17 +274,13 @@ struct MusicTabView: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .onTapGesture {
-            showSheet = true
+            showFullScreenPlayer = true
         }
     }
     
     private func TrackRow(for track: Track) -> some View {
         Button {
-            if viewModel.trackPlaying?.id == track.id, viewModel.isPlaying {
-                viewModel.pause()
-            } else {
-                viewModel.play(track)
-            }
+            trackForDescription = track
         } label: {
             HStack {
                 
