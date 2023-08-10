@@ -38,22 +38,22 @@ final class MusicTabViewModel: ObservableObject {
             self.tracks = tracks
         }
         Task {
-            if let trackModels: [FirestoreTrackModel] = try? await dependencies.firestoreManager.get() {
-
+            do {
+                let trackModels: [FirestoreTrackModel] = try await dependencies.firestoreManager.get()
                 var tracks: [Track] = []
                 
                 for model in trackModels {
-                    if let track = try? await Track(from: model) {
-                        tracks.append(track)
-                    }
+                    tracks.append(try await Track(from: model))
                 }
+                
                 if tracks != self.tracks, !tracks.isEmpty {
                     self.tracks = tracks
                     
-                    if let data = try? JSONEncoder().encode(tracks) {
-                        UserDefaults.standard.setValue(data, forKey: "tracks")
-                    }
+                    let data = try JSONEncoder().encode(tracks)
+                    UserDefaults.standard.setValue(data, forKey: "tracks")
                 }
+            } catch {
+                
             }
         }
     }
