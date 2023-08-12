@@ -56,21 +56,35 @@ struct Meteorite: View {
 }
 
 struct FancyBackground: View {
-    let circleSize: CGFloat = 50
-    let screenSize: CGSize = UIScreen.main.bounds.size
-
+    let circleSize: CGFloat
+    let quantity: Int
+    let randomColor, randomOpacity: Bool
+    
+    init(circleSize: CGFloat = 50, quantity: Int = 25, randomColor: Bool = true, randomOpacity: Bool = true) {
+        self.circleSize = circleSize
+        self.quantity = quantity
+        self.randomColor = randomColor
+        self.randomOpacity = randomOpacity
+    }
+    
     var body: some View {
-        ZStack {
-            ForEach(0..<25) { _ in
-                let randomColor = Color.palette.colorSet.randomElement() ?? .accentColor
-                Meteorite(screenSize: screenSize, circleSize: circleSize, color: randomColor)
-                    .opacity(Double.random(in: 0.1...0.8))
+        GeometryReader { proxy in
+            ZStack {
+                ForEach(0..<quantity) { _ in
+                    Meteorite(screenSize: proxy.size, circleSize: circleSize, color: randomColor ? getRandomColor() : .accent)
+                        .opacity(randomOpacity ? Double.random(in: 0.1...0.8) : 1)
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
+    }
+    
+    private func getRandomColor() -> Color {
+        Color.palette.colorSet.randomElement() ?? .accentColor
     }
 }
 
 #Preview {
-    FancyBackground()
+    FancyBackground(circleSize: 50, quantity: 50)
 }

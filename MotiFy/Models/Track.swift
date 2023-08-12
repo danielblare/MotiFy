@@ -19,7 +19,7 @@ struct FirestoreTrackModel: Codable {
     static let testInstance = FirestoreTrackModel(id: "yKjoNS0o5YkgFSIADjPF", title: "Test Title", genre: "Test genge", audio: "https://download.xn--41a.wiki/cache/2/3db/526816593_456239896.mp3?filename=Yeat-G%C3%ABt%20Busy.mp3", artwork: "https://www.udiscovermusic.com/wp-content/uploads/2022/04/2-Alive-Geek-Pack_-Explicit-Cover-2.jpg", description: "Test description")
 }
 
-struct Track: Codable, Identifiable, Equatable {
+struct Track: Codable, Identifiable, Equatable, Hashable {
     let id: String
     let title: String
     let genre: String

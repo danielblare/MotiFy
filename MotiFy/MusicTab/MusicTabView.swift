@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MusicTabView: View {
     @StateObject private var viewModel: MusicTabViewModel
-    @State private var showFullScreenPlayer: Bool = true
+    @State private var showFullScreenPlayer: Bool = false
     @State private var trackForDescription: Track?
     
     @State private var isDragging: Bool = false {
@@ -33,8 +33,30 @@ struct MusicTabView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(viewModel.tracks) {
-                    TrackRow(for: $0)
+                ForEach(viewModel.tracks.sorted(by: { $0.title < $1.title }).sorted(by: { track1, track2 in
+                    if viewModel.isFavorite(track1), viewModel.isFavorite(track2),
+                       let index1 = viewModel.favorites.firstIndex(of: track1.id),
+                       let index2 = viewModel.favorites.firstIndex(of: track2.id) {
+                        return index1 < index2
+                    } else if viewModel.isFavorite(track1) {
+                        return true
+                    } else {
+                        return false
+                    }
+                })) { track in
+                    TrackRow(for: track)
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            let isFavorite = viewModel.isFavorite(track)
+                            Button {
+                                withAnimation {
+                                    viewModel.setFavorite(to: !isFavorite, for: track)
+                                }
+                            } label: {
+                                Image(systemName: isFavorite ? "star.slash" : "star")
+                                    .symbolVariant(.fill)
+                            }
+                            .tint(.yellow)
+                        }
                 }
             }
             .navigationTitle("Library")
@@ -42,6 +64,7 @@ struct MusicTabView: View {
             .overlay(alignment: .bottom) {
                 if let track = viewModel.trackPlaying {
                     SmallPlayer(for: track)
+                        .animation(.interactiveSpring, value: viewModel.trackPlaying)
                 }
             }
             .sheet(item: $trackForDescription) { track in
@@ -54,6 +77,7 @@ struct MusicTabView: View {
                     FullScreenPlayer(for: track)
                         .presentationDetents([.large])
                         .presentationDragIndicator(.visible)
+                        .animation(.interactiveSpring, value: viewModel.trackPlaying)
                 }
                 
             }
@@ -65,8 +89,25 @@ struct MusicTabView: View {
             ScrollView {
                 ArtworkView(with: dependencies, for: track)
                     .scaledToFill()
-                    .frame(height: proxy.size.height * 0.4)
+                    .frame(height: proxy.size.height * 0.4, alignment: .top)
                     .clipped()
+                    .overlay(alignment: .bottomTrailing) {
+                        Text(formattedDuration(seconds: Int(track.duration.seconds), format: .full))
+                            .padding(5)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                            .padding()
+                    }
+                    .overlay(alignment: .topTrailing) {
+                        if viewModel.isFavorite(track) {
+                            Image(systemName: "star.fill")
+                                .symbolRenderingMode(.multicolor)
+                                .padding(5)
+                                .background(.ultraThinMaterial)
+                                .clipShape(Circle())
+                                .padding()
+                        }
+                    }
                 
                 VStack(alignment: .leading) {
                     
@@ -82,7 +123,7 @@ struct MusicTabView: View {
                         .lineLimit(1)
                         
                         Spacer()
-                        
+                                                                            
                         Button {
                             viewModel.play(track)
                             trackForDescription = nil
@@ -111,6 +152,14 @@ struct MusicTabView: View {
                 .padding()
             }
             .scrollIndicators(.hidden)
+            .scrollContentBackground(.hidden)
+            .background {
+                ArtworkView(with: dependencies, for: track)
+                    .scaledToFill()
+                    .blur(radius: 200)
+                    .ignoresSafeArea()
+            }
+
         }
     }
     
@@ -119,8 +168,18 @@ struct MusicTabView: View {
             ArtworkView(with: dependencies, for: track)
                 .scaledToFit()
                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                .overlay(alignment: .bottomTrailing) {
+                    if viewModel.isFavorite(track) {
+                        Image(systemName: "star.fill")
+                            .symbolRenderingMode(.multicolor)
+                            .padding(5)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .padding()
+                    }
+                }
                 .padding()
-            
+
             VStack {
                 Text(track.title)
                     .font(.title)
@@ -247,6 +306,12 @@ struct MusicTabView: View {
             
         }
         .padding()
+        .background {
+            ArtworkView(with: dependencies, for: track)
+                .scaledToFill()
+                .blur(radius: 100)
+                .ignoresSafeArea()
+        }
     }
     
     private func SmallPlayer(for track: Track) -> some View {
@@ -302,7 +367,13 @@ struct MusicTabView: View {
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(.ultraThinMaterial)
+        .background {
+            ArtworkView(with: dependencies, for: track)
+                .scaledToFill()
+                .blur(radius: 200)
+                .ignoresSafeArea()
+        }
+
         .overlay(alignment: .top) {
             ZStack(alignment: .top) {
                 Rectangle()
@@ -330,7 +401,6 @@ struct MusicTabView: View {
             trackForDescription = track
         } label: {
             HStack {
-                
                 ArtworkView(with: dependencies, for: track)
                     .scaledToFit()
                     .frame(width: 60, height: 60)
@@ -353,6 +423,13 @@ struct MusicTabView: View {
                         .foregroundStyle(.secondary)
                 }
                 .lineLimit(1)
+                
+                Spacer()
+                
+                if viewModel.isFavorite(track) {
+                    Image(systemName: "star.fill")
+                        .symbolRenderingMode(.multicolor)
+                }
             }
             .animation(.easeOut, value: viewModel.isPlaying)
         }
@@ -361,6 +438,7 @@ struct MusicTabView: View {
     private enum Format {
         case hours
         case minutes
+        case full
         
         var stringFormat: String {
             switch self {
@@ -368,6 +446,8 @@ struct MusicTabView: View {
                 "%01d:%02d:%02d"
             case .minutes:
                 "%01d:%02d"
+            case .full:
+                "%02d:%02d:%02d"
             }
         }
     }
@@ -378,7 +458,7 @@ struct MusicTabView: View {
         let seconds = seconds % 60
         
         var arguments: [CVarArg] = [minutes, seconds]
-        if format == .hours {
+        if format == .hours || format == .full {
             arguments.insert(hours, at: 0)
         }
         

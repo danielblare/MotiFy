@@ -12,13 +12,20 @@ import AVKit
 final class MusicTabViewModel: ObservableObject {
     
     @Published private(set) var tracks: [Track] = []
-    
+    @Published private(set) var favorites: [Track.ID] {
+        didSet {
+            if favorites != oldValue {
+                UserDefaults.standard.setValue(favorites, forKey: "favorites")
+            }
+        }
+    }
+
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var currentTime: CMTime = .zero
 
     private var player: AVPlayer
     
-    private var trackPlayingID: Track.ID? = "yKjoNS0o5YkgFSIADjPF"
+    private var trackPlayingID: Track.ID?// = "yKjoNS0o5YkgFSIADjPF"
     
     var trackPlaying: Track? {
         self.tracks.first(where: { $0.id == trackPlayingID })
@@ -26,7 +33,8 @@ final class MusicTabViewModel: ObservableObject {
     
     init(with dependencies: Dependencies) {
         self.player = AVPlayer()
-        
+        self.favorites = UserDefaults.standard.value(forKey: "favorites") as? [Track.ID] ?? []
+
         self.player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: .main) { time in
             Task { @MainActor in
                 self.currentTime = time
@@ -56,6 +64,18 @@ final class MusicTabViewModel: ObservableObject {
                 print(error)
             }
         }
+    }
+    
+    func setFavorite(to value: Bool, for track: Track) {
+        if value == true {
+            favorites.insert(track.id, at: 0)
+        } else {
+            favorites.removeAll(where: { $0 == track.id})
+        }
+    }
+    
+    func isFavorite(_ track: Track) -> Bool {
+        favorites.contains(track.id)
     }
         
     func play(_ track: Track) {
