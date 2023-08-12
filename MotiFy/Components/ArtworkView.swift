@@ -12,7 +12,8 @@ final class ArtworkViewModel: ObservableObject {
         
     @Published private(set) var image: UIImage?
     
-    init(with dependencies: Dependencies, for track: Track) {
+    init(with dependencies: Dependencies, for track: Track?) {
+        guard let track else { return }
         let manager = dependencies.cacheManager
         
         if let savedImage = manager.getFrom(manager.artWorkCache, forKey: track.id) {
@@ -33,7 +34,7 @@ struct ArtworkView: View {
     
     @ObservedObject private var viewModel: ArtworkViewModel
     
-    init(with dependencies: Dependencies, for track: Track) {
+    init(with dependencies: Dependencies, for track: Track?) {
         self.viewModel = ArtworkViewModel(with: dependencies, for: track)
     }
     

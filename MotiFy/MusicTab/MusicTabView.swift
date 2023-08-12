@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MusicTabView: View {
     @StateObject private var viewModel: MusicTabViewModel
-    @State private var showFullScreenPlayer: Bool = false
+    @State private var showFullScreenPlayer: Bool = true
     @State private var trackForDescription: Track?
     
     @State private var isDragging: Bool = false {
@@ -22,6 +22,8 @@ struct MusicTabView: View {
     }
     @State private var draggingTimeSeconds: Double = 0
     @State private var dragTimelineWidth: CGFloat = .zero
+    
+    @State private var showQueue: Bool = false
     
     private let dependencies: Dependencies
     
@@ -44,19 +46,39 @@ struct MusicTabView: View {
                         return false
                     }
                 })) { track in
-                    TrackRow(for: track)
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            let isFavorite = viewModel.isFavorite(track)
-                            Button {
-                                withAnimation {
-                                    viewModel.setFavorite(to: !isFavorite, for: track)
-                                }
-                            } label: {
-                                Image(systemName: isFavorite ? "star.slash" : "star")
-                                    .symbolVariant(.fill)
-                            }
-                            .tint(.yellow)
+                    Button {
+                        trackForDescription = track
+                    } label: {
+                        TrackRow(for: track)
+                            .frame(height: 60)
+                    }
+                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                        Button {
+                            viewModel.addToStart(track)
+                        } label: {
+                            Image(systemName: "text.line.first.and.arrowtriangle.forward")
                         }
+                        .tint(.indigo)
+                        
+                        Button {
+                            viewModel.addToEnd(track)
+                        } label: {
+                            Image(systemName: "text.line.last.and.arrowtriangle.forward")
+                        }
+                        .tint(.orange)
+                    }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        let isFavorite = viewModel.isFavorite(track)
+                        Button {
+                            withAnimation {
+                                viewModel.setFavorite(to: !isFavorite, for: track)
+                            }
+                        } label: {
+                            Image(systemName: isFavorite ? "star.slash" : "star")
+                                .symbolVariant(.fill)
+                        }
+                        .tint(.yellow)
+                    }
                 }
             }
             .navigationTitle("Library")
@@ -73,13 +95,48 @@ struct MusicTabView: View {
                     .presentationDragIndicator(.hidden)
             }
             .sheet(isPresented: $showFullScreenPlayer) {
-                if let track = viewModel.trackPlaying {
-                    FullScreenPlayer(for: track)
-                        .presentationDetents([.large])
-                        .presentationDragIndicator(.visible)
-                        .animation(.interactiveSpring, value: viewModel.trackPlaying)
+                FullScreenPlayer(for: viewModel.trackPlaying)
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
+                    .animation(.interactiveSpring, value: viewModel.trackPlaying)
+            }
+            .sheet(isPresented: $showQueue) {
+                NavigationStack {
+                    Group {
+                        if !viewModel.queue.isEmpty {
+                            List {
+                                ForEach(viewModel.queue) { track in
+                                    TrackRow(for: track, isAnimatedWhenPlaying: false)
+                                }
+                                .onDelete { indexSet in
+                                    viewModel.deleteFromQueue(on: indexSet)
+                                }
+                                .onMove { indexSet, index in
+                                    viewModel.moveElementInQueue(from: indexSet, to: index)
+                                }
+                            }
+                            .listStyle(.inset)
+                        } else {
+                            Text("No tracks in queue")
+                                .foregroundStyle(.secondary)
+                                .font(.title)
+                        }
+                    }
+                    .navigationTitle("Queue")
+                    .toolbar {
+                        EditButton()
+                    }
                 }
-                
+                .presentationDetents([.medium, .large])
+            }
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showQueue.toggle()
+                    } label: {
+                        Image(systemName: "list.bullet")
+                    }
+                }
             }
         }
     }
@@ -123,7 +180,7 @@ struct MusicTabView: View {
                         .lineLimit(1)
                         
                         Spacer()
-                                                                            
+                        
                         Button {
                             viewModel.play(track)
                             trackForDescription = nil
@@ -159,17 +216,17 @@ struct MusicTabView: View {
                     .blur(radius: 200)
                     .ignoresSafeArea()
             }
-
+            
         }
     }
     
-    private func FullScreenPlayer(for track: Track) -> some View {
+    private func FullScreenPlayer(for track: Track?) -> some View {
         VStack {
             ArtworkView(with: dependencies, for: track)
                 .scaledToFit()
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(alignment: .bottomTrailing) {
-                    if viewModel.isFavorite(track) {
+                    if let track, viewModel.isFavorite(track) {
                         Image(systemName: "star.fill")
                             .symbolRenderingMode(.multicolor)
                             .padding(5)
@@ -179,13 +236,13 @@ struct MusicTabView: View {
                     }
                 }
                 .padding()
-
+            
             VStack {
-                Text(track.title)
+                Text(track?.title ?? "-")
                     .font(.title)
                     .fontWeight(.semibold)
                 
-                Text(track.genre)
+                Text(track?.genre ?? "-")
                     .foregroundStyle(.secondary)
                     .font(.title3)
             }
@@ -197,19 +254,22 @@ struct MusicTabView: View {
                     Rectangle()
                         .fill(.secondary.opacity(0.3))
                     
-                    GeometryReader { proxy in
-                        Rectangle()
-                            .fill(isDragging ? .primary : .secondary)
-                            .frame(width: proxy.size.width / (track.duration.seconds / (isDragging ? draggingTimeSeconds : viewModel.currentTime.seconds)))
-                            .onChange(of: proxy.size) { newSize in
-                                dragTimelineWidth = newSize.width
-                            }
+                    if let track {
+                        GeometryReader { proxy in
+                            Rectangle()
+                                .fill(isDragging ? .primary : .secondary)
+                                .frame(width: proxy.size.width / (track.duration.seconds / (isDragging ? draggingTimeSeconds : viewModel.currentTime.seconds)))
+                                .onChange(of: proxy.size) { newSize in
+                                    dragTimelineWidth = newSize.width
+                                }
+                        }
                     }
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 15))
                 .frame(height: isDragging ? 15 : 5)
                 .gesture(DragGesture(minimumDistance: 0)
                     .onChanged { value in
+                        guard let track else { return }
                         draggingTimeSeconds = viewModel.currentTime.seconds
                         
                         isDragging = true
@@ -239,20 +299,14 @@ struct MusicTabView: View {
                     }
                 )
                 
-                
-                let totalHours = Int(track.duration.seconds) / 3600
-                let format: Format = totalHours >= 1 ? .hours : .minutes
-                
-                let totalCurrentSeconds = Int(isDragging ? draggingTimeSeconds : viewModel.currentTime.seconds)
-                
-                let totalSecondsLeft = Int(track.duration.seconds) - totalCurrentSeconds
+                let timeline = getTimeline(for: track)
                 
                 HStack {
-                    Text(formattedDuration(seconds: totalCurrentSeconds, format: format))
+                    Text(timeline.current)
                     
                     Spacer(minLength: 0)
                     
-                    Text("-" + formattedDuration(seconds: totalSecondsLeft, format: format))
+                    Text(timeline.left)
                 }
                 .monospacedDigit()
                 .foregroundStyle(isDragging ? .primary : .secondary)
@@ -266,6 +320,11 @@ struct MusicTabView: View {
             .animation(.snappy(), value: isDragging)
             
             HStack {
+                
+                Image(systemName: "person")
+
+                Spacer()
+
                 Button {
                     viewModel.prev()
                 } label: {
@@ -275,7 +334,9 @@ struct MusicTabView: View {
                 }
                 
                 Button {
-                    viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
+                    if let track {
+                        viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
+                    }
                 } label: {
                     let color: Color = .accentColor
                     ZStack(alignment: .center) {
@@ -300,10 +361,32 @@ struct MusicTabView: View {
                         .imageScale(.large)
                 }
                 
+                Spacer()
+                
+                Button {
+                    viewModel.nextRepeatOption()
+                } label: {
+                    viewModel.repeatOption.icon
+                        .foregroundStyle(viewModel.repeatOption == .dontRepeat ? Color.secondary : .accent)
+                }
+                
             }
+            .padding(.horizontal)
+            .disabled(track == nil)
             
             Spacer(minLength: 0)
             
+            if let nextTrack = viewModel.queue.first {
+                    Text("Next in queue:")
+                        .fontWeight(.semibold)
+                        .padding(.horizontal)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    TrackRow(for: nextTrack, isAnimatedWhenPlaying: false)
+                    .padding(.horizontal)
+                    .frame(height: 50)
+
+            }
         }
         .padding()
         .background {
@@ -311,6 +394,21 @@ struct MusicTabView: View {
                 .scaledToFill()
                 .blur(radius: 100)
                 .ignoresSafeArea()
+        }
+    }
+    
+    private func getTimeline(for track: Track?) -> (current: String, left: String) {
+        if let track {
+            let totalHours = Int(track.duration.seconds) / 3600
+            let format: Format = totalHours >= 1 ? .hours : .minutes
+            
+            let totalCurrentSeconds = Int(isDragging ? draggingTimeSeconds : viewModel.currentTime.seconds)
+            
+            let totalSecondsLeft = Int(track.duration.seconds) - totalCurrentSeconds
+            
+            return (formattedDuration(seconds: totalCurrentSeconds, format: format), "-" + formattedDuration(seconds: totalSecondsLeft, format: format))
+        } else {
+            return ("--:--", "--:--")
         }
     }
     
@@ -373,7 +471,7 @@ struct MusicTabView: View {
                 .blur(radius: 200)
                 .ignoresSafeArea()
         }
-
+        
         .overlay(alignment: .top) {
             ZStack(alignment: .top) {
                 Rectangle()
@@ -396,43 +494,38 @@ struct MusicTabView: View {
         }
     }
     
-    private func TrackRow(for track: Track) -> some View {
-        Button {
-            trackForDescription = track
-        } label: {
-            HStack {
-                ArtworkView(with: dependencies, for: track)
-                    .scaledToFit()
-                    .frame(width: 60, height: 60)
-                    .overlay {
-                        if viewModel.trackPlaying?.id == track.id {
-                            MusicPlayingAnimation(playing: viewModel.isPlaying, spacing: 3, cornerRadius: 2)
-                                .padding()
-                                .background(.ultraThinMaterial.opacity(0.5))
-                                .foregroundStyle(.gray)
-                        }
+    private func TrackRow(for track: Track, isAnimatedWhenPlaying: Bool = true) -> some View {
+        HStack {
+            ArtworkView(with: dependencies, for: track)
+                .scaledToFit()
+                .overlay {
+                    if isAnimatedWhenPlaying, viewModel.trackPlaying?.id == track.id {
+                        MusicPlayingAnimation(playing: viewModel.isPlaying, spacing: 3, cornerRadius: 2)
+                            .padding()
+                            .background(.ultraThinMaterial.opacity(0.5))
+                            .foregroundStyle(.gray)
                     }
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                
-                
-                
-                VStack(alignment: .leading) {
-                    Text(track.title)
-                    
-                    Text(track.genre)
-                        .foregroundStyle(.secondary)
                 }
-                .lineLimit(1)
+                .clipShape(RoundedRectangle(cornerRadius: 5))
+            
+            
+            
+            VStack(alignment: .leading) {
+                Text(track.title)
                 
-                Spacer()
-                
-                if viewModel.isFavorite(track) {
-                    Image(systemName: "star.fill")
-                        .symbolRenderingMode(.multicolor)
-                }
+                Text(track.genre)
+                    .foregroundStyle(.secondary)
             }
-            .animation(.easeOut, value: viewModel.isPlaying)
+            .lineLimit(1)
+            
+            Spacer()
+            
+            if viewModel.isFavorite(track) {
+                Image(systemName: "star.fill")
+                    .symbolRenderingMode(.multicolor)
+            }
         }
+        .animation(.easeOut, value: viewModel.isPlaying)
     }
     
     private enum Format {

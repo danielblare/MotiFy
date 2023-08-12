@@ -5,12 +5,33 @@
 //  Created by Daniel on 8/8/23.
 //
 
-import Foundation
+import SwiftUI
 import AVKit
 
 @MainActor
 final class MusicTabViewModel: ObservableObject {
     
+    enum RepeatOption {
+        case dontRepeat
+        case repeatAll
+        case repeatOne
+        
+        var icon: Image {
+            switch self {
+            case .dontRepeat:
+                Image(systemName: "repeat")
+            case .repeatAll:
+                Image(systemName: "repeat")
+            case .repeatOne:
+                Image(systemName: "repeat.1")
+            }
+        }
+    }
+    
+    @Published private(set) var queue: [Track] = []
+    
+    @Published private(set) var repeatOption: RepeatOption = .dontRepeat
+
     @Published private(set) var tracks: [Track] = []
     @Published private(set) var favorites: [Track.ID] {
         didSet {
@@ -22,10 +43,12 @@ final class MusicTabViewModel: ObservableObject {
 
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var currentTime: CMTime = .zero
+    
+    private var history: [Track] = []
 
     private var player: AVPlayer
     
-    private var trackPlayingID: Track.ID?// = "yKjoNS0o5YkgFSIADjPF"
+    private var trackPlayingID: Track.ID? = "yKjoNS0o5YkgFSIADjPF"
     
     var trackPlaying: Track? {
         self.tracks.first(where: { $0.id == trackPlayingID })
@@ -41,6 +64,8 @@ final class MusicTabViewModel: ObservableObject {
             }
         }
         
+        NotificationCenter.default.addObserver(self, selector: #selector(itemDidFinishPlaying(_:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+
         if let data = UserDefaults.standard.data(forKey: "tracks"),
            let tracks = try? JSONDecoder().decode([Track].self, from: data) {
             self.tracks = tracks
@@ -66,6 +91,45 @@ final class MusicTabViewModel: ObservableObject {
         }
     }
     
+    @objc private func itemDidFinishPlaying(_ notification: Notification) {
+        if repeatOption == .repeatOne {
+            playAgain()
+        } else {
+            next()
+        }
+    }
+    
+    func moveElementInQueue(from set: IndexSet, to index: Int) {
+        queue.move(fromOffsets: set, toOffset: index)
+    }
+    
+    func deleteFromQueue(on set: IndexSet) {
+        withAnimation {
+            queue.remove(atOffsets: set)
+        }
+    }
+    
+    private func deleteFirstTrackFromQueue(track: Track) {
+        guard let index = queue.firstIndex(of: track) else { return }
+        history.append(queue.remove(at: index))
+    }
+    
+    func nextRepeatOption() {
+        switch repeatOption {
+        case .dontRepeat: repeatOption = .repeatAll
+        case .repeatAll: repeatOption = .repeatOne
+        case .repeatOne: repeatOption = .dontRepeat
+        }
+    }
+    
+    func addToStart(_ track: Track) {
+        queue.insert(track, at: 0)
+    }
+    
+    func addToEnd(_ track: Track) {
+        queue.append(track)
+    }
+    
     func setFavorite(to value: Bool, for track: Track) {
         if value == true {
             favorites.insert(track.id, at: 0)
@@ -76,6 +140,14 @@ final class MusicTabViewModel: ObservableObject {
     
     func isFavorite(_ track: Track) -> Bool {
         favorites.contains(track.id)
+    }
+    
+    private func playAgain() {
+        Task {
+            await skipTo(.zero)
+            player.play()
+            isPlaying = true
+        }
     }
         
     func play(_ track: Track) {
@@ -112,12 +184,17 @@ final class MusicTabViewModel: ObservableObject {
     }
     
     private func previousTrack() {
-        guard let trackPlaying, let index = tracks.firstIndex(of: trackPlaying) else { return }
-        play(tracks[(index - 1 + tracks.count) % tracks.count])
+        guard let prevTrack = history.popLast() else { return }
+        play(prevTrack)
     }
     
     func next() {
-        guard let trackPlaying, let index = tracks.firstIndex(of: trackPlaying) else { return }
-        play(tracks[(index + 1) % tracks.count])
+        guard let nextTrackFromQueue = queue.first else {
+            isPlaying = false
+            trackPlayingID = nil
+            return
+        }
+        deleteFirstTrackFromQueue(track: nextTrackFromQueue)
+        play(nextTrackFromQueue)
     }
 }
