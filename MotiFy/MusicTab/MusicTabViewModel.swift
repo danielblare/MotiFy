@@ -83,6 +83,10 @@ final class MusicTabViewModel: ObservableObject {
         }
     }
     
+    func skipTo(_ time: CMTime) async {
+        await player.seek(to: time)
+    }
+    
     private func startAgain() {
         player.seek(to: .zero)
     }

@@ -32,6 +32,7 @@
 		BBD5516A2A83B63500AECB9E /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD551692A83B63500AECB9E /* CacheManager.swift */; };
 		BBE2B56A2A7D88F500264BF5 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE2B5692A7D88F500264BF5 /* View.swift */; };
 		BBE2B56D2A7D8BD600264BF5 /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE2B56C2A7D8BD600264BF5 /* Quote.swift */; };
+		BBE5EF8B2A87C814004F6D97 /* HapticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE5EF8A2A87C814004F6D97 /* HapticService.swift */; };
 		BBF38DD42A82718E009EE1A8 /* MusicTabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF38DD32A82718E009EE1A8 /* MusicTabViewModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 		BBD551692A83B63500AECB9E /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		BBE2B5692A7D88F500264BF5 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		BBE2B56C2A7D8BD600264BF5 /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
+		BBE5EF8A2A87C814004F6D97 /* HapticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticService.swift; sourceTree = "<group>"; };
 		BBF38DD32A82718E009EE1A8 /* MusicTabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +124,7 @@
 		BB7300E32A7C45B0006A7020 /* MotiFy */ = {
 			isa = PBXGroup;
 			children = (
+				BBE5EF892A87C809004F6D97 /* Services */,
 				BB3563D42A81508400D56250 /* Managers */,
 				BB3563C72A814E7800D56250 /* GoogleService-Info.plist */,
 				BB3428CC2A8112AB00243DDA /* MusicTab */,
@@ -182,6 +185,14 @@
 				BB65B69D2A85350700B37405 /* Track.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		BBE5EF892A87C809004F6D97 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BBE5EF8A2A87C814004F6D97 /* HapticService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -283,6 +294,7 @@
 				BB7300F72A7C5807006A7020 /* LoadingBouncyView.swift in Sources */,
 				BB31BCA52A82A76C007DBF67 /* CMTime.swift in Sources */,
 				BB3563D62A81508D00D56250 /* FirestoreManager.swift in Sources */,
+				BBE5EF8B2A87C814004F6D97 /* HapticService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,6 +13,16 @@ struct MusicTabView: View {
     @State private var showFullScreenPlayer: Bool = true
     @State private var trackForDescription: Track?
     
+    @State private var isDragging: Bool = false {
+        didSet {
+            if isDragging != oldValue {
+                HapticService.shared.impact(style: .light)
+            }
+        }
+    }
+    @State private var draggingTimeSeconds: Double = 0
+    @State private var dragTimelineWidth: CGFloat = .zero
+    
     private let dependencies: Dependencies
     
     init(with dependencies: Dependencies) {
@@ -130,17 +140,51 @@ struct MusicTabView: View {
                     
                     GeometryReader { proxy in
                         Rectangle()
-                            .fill(.secondary)
-                            .frame(width: proxy.size.width / (track.duration.seconds / viewModel.currentTime.seconds))
+                            .fill(isDragging ? .primary : .secondary)
+                            .frame(width: proxy.size.width / (track.duration.seconds / (isDragging ? draggingTimeSeconds : viewModel.currentTime.seconds)))
+                            .onChange(of: proxy.size) { newSize in
+                                dragTimelineWidth = newSize.width
+                            }
                     }
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 5))
-                .frame(height: 5)
+                .clipShape(RoundedRectangle(cornerRadius: 15))
+                .frame(height: isDragging ? 15 : 5)
+                .gesture(DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        draggingTimeSeconds = viewModel.currentTime.seconds
+                        
+                        isDragging = true
+                        
+                        // Settings
+                        let lineLength: CGFloat = dragTimelineWidth
+                        let trackDuration = track.duration.seconds
+                        let factor: Double = 1
+                        
+                        // Calculations
+                        let distancePerSecond = lineLength / trackDuration
+                        
+                        let changeInSeconds = value.translation.width * factor / distancePerSecond
+                        
+                        let newDraggingTime = draggingTimeSeconds + changeInSeconds
+                        draggingTimeSeconds = min(max(newDraggingTime, 0), trackDuration)
+                        
+                    }
+                    .onEnded { value in
+                        let newTime: CMTime = .init(seconds: draggingTimeSeconds, preferredTimescale: 600)
+                        
+                        Task {
+                            await viewModel.skipTo(newTime)
+                            
+                            isDragging = false
+                        }
+                    }
+                )
+                
                 
                 let totalHours = Int(track.duration.seconds) / 3600
                 let format: Format = totalHours >= 1 ? .hours : .minutes
                 
-                let totalCurrentSeconds = Int(viewModel.currentTime.seconds)
+                let totalCurrentSeconds = Int(isDragging ? draggingTimeSeconds : viewModel.currentTime.seconds)
                 
                 let totalSecondsLeft = Int(track.duration.seconds) - totalCurrentSeconds
                 
@@ -152,12 +196,15 @@ struct MusicTabView: View {
                     Text("-" + formattedDuration(seconds: totalSecondsLeft, format: format))
                 }
                 .monospacedDigit()
-                .foregroundStyle(.secondary)
+                .foregroundStyle(isDragging ? .primary : .secondary)
                 .font(.footnote)
                 .padding(.horizontal, 5)
                 
             }
+            .frame(minHeight: 40)
             .padding()
+            .scaleEffect(isDragging ? 1.03 : 1)
+            .animation(.snappy(), value: isDragging)
             
             HStack {
                 Button {
