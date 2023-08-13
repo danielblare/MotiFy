@@ -7,29 +7,33 @@
 
 import SwiftUI
 
-struct Meteorite: View {
-    let screenSize: CGSize
-    let circleSize: CGFloat
-    let startPosition: CGPoint
-    let startVelocity: CGPoint
+struct Blob: View {
+    private let screenSize: CGSize
+    private let blobSize: CGFloat
+    private let startPosition: CGPoint
+    private let startVelocity: CGPoint
+    private let rotation: Angle
     @State private var position: CGPoint
     @State private var velocity: CGPoint
-    let color: Color
+    private let BlobImage: Image
 
-    init(screenSize: CGSize, circleSize: CGFloat, color: Color = .accentColor) {
+    init(screenSize: CGSize, blobSize: CGFloat) {
         self.screenSize = screenSize
-        self.circleSize = circleSize
+        self.blobSize = blobSize
         self.startPosition = CGPoint(x: CGFloat.random(in: 0...screenSize.width), y: CGFloat.random(in: 0...screenSize.height))
         self.startVelocity = CGPoint(x: CGFloat.random(in: 0.1...1), y: CGFloat.random(in: 0.5...1.5))
         self._position = State(initialValue: startPosition)
         self._velocity = State(initialValue: startVelocity)
-        self.color = color
+        self.BlobImage = .blobs.blobSet.randomElement() ?? .blobs.blob1
+        self.rotation = .degrees(.random(in: 0...360))
     }
 
     var body: some View {
-        Circle()
-            .frame(width: circleSize, height: circleSize)
-            .foregroundStyle(color)
+       BlobImage
+            .resizable()
+            .scaledToFit()
+            .frame(width: blobSize, height: blobSize)
+            .rotationEffect(rotation)
             .position(position)
             .onAppear() {
                 self.position = self.startPosition
@@ -46,7 +50,7 @@ struct Meteorite: View {
             y: self.position.y + self.velocity.y
         )
 
-        if newPosition.y - circleSize / 2 > screenSize.height {
+        if newPosition.y - blobSize / 2 > screenSize.height {
             newPosition = CGPoint(x: -CGFloat.random(in: 0...screenSize.width/2), y: -CGFloat.random(in: 0...screenSize.height/2))
             velocity = CGPoint(x: CGFloat.random(in: 0.1...2), y: CGFloat.random(in: 0.5...1.5))
         }
@@ -56,14 +60,13 @@ struct Meteorite: View {
 }
 
 struct FancyBackground: View {
-    let circleSize: CGFloat
-    let quantity: Int
-    let randomColor, randomOpacity: Bool
+    private let blobSize: CGFloat
+    private let quantity: Int
+    private let randomOpacity: Bool
     
-    init(circleSize: CGFloat = 50, quantity: Int = 25, randomColor: Bool = true, randomOpacity: Bool = true) {
-        self.circleSize = circleSize
+    init(blobSize: CGFloat = 60, quantity: Int = 25, randomOpacity: Bool = true) {
+        self.blobSize = blobSize
         self.quantity = quantity
-        self.randomColor = randomColor
         self.randomOpacity = randomOpacity
     }
     
@@ -71,7 +74,7 @@ struct FancyBackground: View {
         GeometryReader { proxy in
             ZStack {
                 ForEach(0..<quantity) { _ in
-                    Meteorite(screenSize: proxy.size, circleSize: circleSize, color: randomColor ? getRandomColor() : .accent)
+                    Blob(screenSize: proxy.size, blobSize: blobSize)
                         .opacity(randomOpacity ? Double.random(in: 0.1...0.8) : 1)
                 }
             }
@@ -86,5 +89,5 @@ struct FancyBackground: View {
 }
 
 #Preview {
-    FancyBackground(circleSize: 50, quantity: 50)
+    FancyBackground(blobSize: 60, quantity: 50, randomOpacity: true)
 }

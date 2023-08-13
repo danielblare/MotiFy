@@ -7,6 +7,23 @@
 
 import SwiftUI
 
+extension Image {
+    static let blobs: Blobs = Blobs()
+    
+    struct Blobs {
+        let blob1 = Image("blob1")
+        let blob2 = Image("blob2")
+        let blob3 = Image("blob3")
+        let blob4 = Image("blob4")
+        let blob5 = Image("blob5")
+        let blob6 = Image("blob6")
+        
+        var blobSet: [Image] {
+            [blob1, blob2, blob3, blob4, blob5, blob6]
+        }
+    }
+}
+
 extension Color {
     static let palette: Palette = Palette()
     
@@ -17,7 +34,8 @@ extension Color {
         let color4 = Color("color4")
         let color5 = Color("color5")
         let color6 = Color("color6")
-        
+        let background = Color("background")
+
         var colorSet: Set<Color> {
             [color1, color2, color3, color4, color5, color6]
         }

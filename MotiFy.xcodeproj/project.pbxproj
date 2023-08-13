@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		BB31BCA52A82A76C007DBF67 /* CMTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB31BCA42A82A76C007DBF67 /* CMTime.swift */; };
 		BB3428CE2A8112B200243DDA /* MusicTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3428CD2A8112B200243DDA /* MusicTabView.swift */; };
+		BB34F5202A891B880012EB53 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB34F51F2A891B880012EB53 /* Launch Screen.storyboard */; };
+		BB34F5262A8924780012EB53 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB34F5252A8924780012EB53 /* LaunchView.swift */; };
 		BB3563C82A814E7800D56250 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB3563C72A814E7800D56250 /* GoogleService-Info.plist */; };
 		BB3563CB2A814EC100D56250 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = BB3563CA2A814EC100D56250 /* FirebaseFirestore */; };
 		BB3563CD2A814EC100D56250 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = BB3563CC2A814EC100D56250 /* FirebaseFirestoreCombine-Community */; };
@@ -39,6 +41,8 @@
 /* Begin PBXFileReference section */
 		BB31BCA42A82A76C007DBF67 /* CMTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTime.swift; sourceTree = "<group>"; };
 		BB3428CD2A8112B200243DDA /* MusicTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabView.swift; sourceTree = "<group>"; };
+		BB34F51F2A891B880012EB53 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		BB34F5252A8924780012EB53 /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		BB3563C72A814E7800D56250 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BB3563D52A81508D00D56250 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		BB3563D72A815A3C00D56250 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
@@ -87,6 +91,45 @@
 			path = MusicTab;
 			sourceTree = "<group>";
 		};
+		BB34F51E2A891B7E0012EB53 /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				BB34F51F2A891B880012EB53 /* Launch Screen.storyboard */,
+				BB34F5252A8924780012EB53 /* LaunchView.swift */,
+			);
+			path = Launch;
+			sourceTree = "<group>";
+		};
+		BB34F5272A8933EC0012EB53 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+				BB34F5282A8933ED0012EB53 /* New Group */,
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		BB34F5282A8933ED0012EB53 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		BB34F5292A8933EF0012EB53 /* New Group1 */ = {
+			isa = PBXGroup;
+			children = (
+				BB34F52A2A8933F10012EB53 /* New Group */,
+			);
+			path = "New Group1";
+			sourceTree = "<group>";
+		};
+		BB34F52A2A8933F10012EB53 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		BB3563D42A81508400D56250 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +167,7 @@
 		BB7300E32A7C45B0006A7020 /* MotiFy */ = {
 			isa = PBXGroup;
 			children = (
+				BB34F51E2A891B7E0012EB53 /* Launch */,
 				BBE5EF892A87C809004F6D97 /* Services */,
 				BB3563D42A81508400D56250 /* Managers */,
 				BB3563C72A814E7800D56250 /* GoogleService-Info.plist */,
@@ -136,6 +180,8 @@
 				BB7300E42A7C45B0006A7020 /* MotiFyApp.swift */,
 				BB7300E62A7C45B0006A7020 /* ContentView.swift */,
 				BB7300E82A7C45B2006A7020 /* Assets.xcassets */,
+				BB34F5292A8933EF0012EB53 /* New Group1 */,
+				BB34F5272A8933EC0012EB53 /* New Group */,
 				BB7300EA2A7C45B2006A7020 /* Preview Content */,
 			);
 			path = MotiFy;
@@ -265,6 +311,7 @@
 			files = (
 				BB7300EC2A7C45B2006A7020 /* Preview Assets.xcassets in Resources */,
 				BB7300E92A7C45B2006A7020 /* Assets.xcassets in Resources */,
+				BB34F5202A891B880012EB53 /* Launch Screen.storyboard in Resources */,
 				BB3563C82A814E7800D56250 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +324,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB7300F42A7C474F006A7020 /* QuoteTabView.swift in Sources */,
+				BB34F5262A8924780012EB53 /* LaunchView.swift in Sources */,
 				BB9CDAD82A7FA03900E0DD4B /* FancyBackground.swift in Sources */,
 				BB3428CE2A8112B200243DDA /* MusicTabView.swift in Sources */,
 				BB3563D82A815A3C00D56250 /* StorageManager.swift in Sources */,
@@ -353,6 +401,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -410,6 +459,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -436,8 +486,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -472,8 +522,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

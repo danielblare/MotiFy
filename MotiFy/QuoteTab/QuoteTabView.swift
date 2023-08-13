@@ -78,7 +78,7 @@ struct QuoteTabView: View {
             .padding()
             .background {
                 FancyBackground()
-                    .blur(radius: 3)
+                    .blur(radius: 2)
             }
     }
     

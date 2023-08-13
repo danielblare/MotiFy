@@ -35,6 +35,9 @@ struct MotiFyApp: App {
     @UIApplicationDelegateAdaptor private var delegate: AppDelegate
     private let dependencies: Dependencies
     
+    /// Showing the launch screen when app starts
+    @State private var showLaunchView: Bool = true
+    
     init() {
         
         FirebaseApp.configure()
@@ -44,7 +47,14 @@ struct MotiFyApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(with: dependencies)
+            if showLaunchView {
+                LaunchView($showLaunchView)
+                    .transition(.asymmetric(insertion: .identity, removal: .opacity))
+                    .zIndex(1.0)
+            } else {
+                ContentView(with: dependencies)
+                
+            }
         }
     }
 }
