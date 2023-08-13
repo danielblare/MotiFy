@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MusicTabView: View {
     @StateObject private var viewModel: MusicTabViewModel
-    @State private var showFullScreenPlayer: Bool = true
+    @State private var showFullScreenPlayer: Bool = false
     @State private var trackForDescription: Track?
     
     @State private var isDragging: Bool = false {
@@ -54,14 +54,16 @@ struct MusicTabView: View {
                     }
                     .swipeActions(edge: .leading, allowsFullSwipe: true) {
                         Button {
-                            viewModel.addToStart(track)
+                            HapticService.shared.impact(style: .medium)
+                            viewModel.addToStart(QueueElement(track: track))
                         } label: {
                             Image(systemName: "text.line.first.and.arrowtriangle.forward")
                         }
                         .tint(.indigo)
                         
                         Button {
-                            viewModel.addToEnd(track)
+                            HapticService.shared.impact(style: .medium)
+                            viewModel.addToEnd(QueueElement(track: track))
                         } label: {
                             Image(systemName: "text.line.last.and.arrowtriangle.forward")
                         }
@@ -70,6 +72,7 @@ struct MusicTabView: View {
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         let isFavorite = viewModel.isFavorite(track)
                         Button {
+                            HapticService.shared.impact(style: .medium)
                             withAnimation {
                                 viewModel.setFavorite(to: !isFavorite, for: track)
                             }
@@ -99,14 +102,16 @@ struct MusicTabView: View {
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
                     .animation(.interactiveSpring, value: viewModel.trackPlaying)
+                    .animation(.interactiveSpring, value: viewModel.queue)
             }
             .sheet(isPresented: $showQueue) {
                 NavigationStack {
                     Group {
                         if !viewModel.queue.isEmpty {
                             List {
-                                ForEach(viewModel.queue) { track in
-                                    TrackRow(for: track, isAnimatedWhenPlaying: false)
+                                ForEach(viewModel.queue) { element in
+                                    TrackRow(for: element.track, isAnimatedWhenPlaying: false)
+                                        .frame(height: 50)
                                 }
                                 .onDelete { indexSet in
                                     viewModel.deleteFromQueue(on: indexSet)
@@ -124,7 +129,14 @@ struct MusicTabView: View {
                     }
                     .navigationTitle("Queue")
                     .toolbar {
-                        EditButton()
+                        ToolbarItem(placement: .navigation) {
+                            Button("Clear") {
+                                viewModel.clearQueue()
+                            }
+                        }
+                        ToolbarItem(placement: .primaryAction) {
+                            EditButton()
+                        }
                     }
                 }
                 .presentationDetents([.medium, .large])
@@ -321,7 +333,25 @@ struct MusicTabView: View {
             
             HStack {
                 
-                Image(systemName: "person")
+                Button {
+                    viewModel.toggleAutoplay()
+                } label: {
+                    ZStack {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                            .resizable()
+                            .scaledToFit()
+                            .rotationEffect(.degrees(viewModel.autoplay ? 270 : 90))
+                        
+                        Image(systemName: "play.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .padding(10)
+                            .padding(.leading, 1)
+                    }
+                    .frame(width: 30, height: 30)
+                    .foregroundStyle(viewModel.autoplay ? Color.accentColor : .secondary)
+                }
+                .animation(.bouncy, value: viewModel.autoplay)
 
                 Spacer()
 
@@ -339,17 +369,16 @@ struct MusicTabView: View {
                     }
                 } label: {
                     let color: Color = .accentColor
-                    ZStack(alignment: .center) {
-                        Circle()
-                            .fill(color)
-                        
-                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                            .resizable()
-                            .foregroundStyle(color.contrastingTextColor())
-                            .padding(20)
-                            .padding(.leading, viewModel.isPlaying ? 0 : 5)
-                    }
-                    .frame(width: 70, height: 70)
+                    
+                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(color.contrastingTextColor())
+                        .padding()
+                        .padding(.leading, viewModel.isPlaying ? 0 : 5)
+                        .frame(width: 70, height: 70)
+                        .background(color)
+                        .clipShape(Circle())
                 }
                 .padding(.horizontal)
                 
@@ -367,6 +396,7 @@ struct MusicTabView: View {
                     viewModel.nextRepeatOption()
                 } label: {
                     viewModel.repeatOption.icon
+                        .imageScale(.large)
                         .foregroundStyle(viewModel.repeatOption == .dontRepeat ? Color.secondary : .accent)
                 }
                 
@@ -376,13 +406,13 @@ struct MusicTabView: View {
             
             Spacer(minLength: 0)
             
-            if let nextTrack = viewModel.queue.first {
-                    Text("Next in queue:")
+            if let nextElement = viewModel.queue.first {
+                Text(nextElement.autoplay ? "Autoplay:" : "Next in queue:")
                         .fontWeight(.semibold)
                         .padding(.horizontal)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    TrackRow(for: nextTrack, isAnimatedWhenPlaying: false)
+                TrackRow(for: nextElement.track, isAnimatedWhenPlaying: false)
                     .padding(.horizontal)
                     .frame(height: 50)
 
@@ -442,15 +472,17 @@ struct MusicTabView: View {
                     viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
                 } label: {
                     let color: Color = .accentColor
-                    ZStack(alignment: .center) {
-                        Circle()
-                            .fill(color)
-                        
-                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                            .foregroundStyle(color.contrastingTextColor())
-                            .padding([.leading, .bottom], viewModel.isPlaying ? 0 : 1)
-                    }
-                    .frame(width: 40, height: 40, alignment: .center)
+                    
+                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(color.contrastingTextColor())
+                        .padding(10)
+                        .padding(.leading, viewModel.isPlaying ? 0 : 3)
+                        .frame(width: 40, height: 40)
+                        .background(color)
+                        .clipShape(Circle())
+
                 }
                 
                 Button {
