@@ -356,7 +356,7 @@ struct MusicTabView: View {
                 Spacer()
 
                 Button {
-                    viewModel.prev()
+                    try? viewModel.prev()
                 } label: {
                     Image(systemName: "backward.fill")
                         .foregroundStyle(Color.primary)
@@ -383,7 +383,7 @@ struct MusicTabView: View {
                 .padding(.horizontal)
                 
                 Button {
-                    viewModel.next()
+                    try? viewModel.next()
                 } label: {
                     Image(systemName: "forward.fill")
                         .foregroundStyle(Color.primary)
@@ -462,7 +462,7 @@ struct MusicTabView: View {
             
             HStack {
                 Button {
-                    viewModel.prev()
+                    try? viewModel.prev()
                 } label: {
                     Image(systemName: "backward.fill")
                         .foregroundStyle(Color.primary)
@@ -486,7 +486,7 @@ struct MusicTabView: View {
                 }
                 
                 Button {
-                    viewModel.next()
+                    try? viewModel.next()
                 } label: {
                     Image(systemName: "forward.fill")
                         .foregroundStyle(Color.primary)

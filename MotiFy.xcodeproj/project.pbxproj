@@ -63,6 +63,7 @@
 		BBE2B5692A7D88F500264BF5 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		BBE2B56C2A7D8BD600264BF5 /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
 		BBE5EF8A2A87C814004F6D97 /* HapticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticService.swift; sourceTree = "<group>"; };
+		BBF24F782A894BB00022C93A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BBF38DD32A82718E009EE1A8 /* MusicTabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -167,6 +168,7 @@
 		BB7300E32A7C45B0006A7020 /* MotiFy */ = {
 			isa = PBXGroup;
 			children = (
+				BBF24F782A894BB00022C93A /* Info.plist */,
 				BB34F51E2A891B7E0012EB53 /* Launch */,
 				BBE5EF892A87C809004F6D97 /* Services */,
 				BB3563D42A81508400D56250 /* Managers */,
@@ -481,6 +483,7 @@
 				DEVELOPMENT_TEAM = VFJ7656544;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MotiFy/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MotiFy;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -517,6 +520,7 @@
 				DEVELOPMENT_TEAM = VFJ7656544;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MotiFy/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MotiFy;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

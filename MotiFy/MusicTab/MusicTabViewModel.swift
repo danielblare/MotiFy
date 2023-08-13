@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVKit
+import MediaPlayer
 
 struct QueueElement: Equatable, Identifiable {
     let id: String
@@ -22,6 +23,8 @@ struct QueueElement: Equatable, Identifiable {
 
 @MainActor
 final class MusicTabViewModel: ObservableObject {
+    
+    private let cacheManager: CacheManager
     
     enum RepeatOption: Codable, Hashable {
         case dontRepeat
@@ -86,6 +89,9 @@ final class MusicTabViewModel: ObservableObject {
     }
     
     init(with dependencies: Dependencies) {
+        
+        self.cacheManager = dependencies.cacheManager
+        
         self.player = AVPlayer()
         self.favorites = UserDefaults.standard.value(forKey: "favorites") as? [Track.ID] ?? []
 
@@ -102,7 +108,11 @@ final class MusicTabViewModel: ObservableObject {
            let tracks = try? JSONDecoder().decode([Track].self, from: data) {
             self.tracks = tracks
         }
+        
+        UIApplication.shared.beginReceivingRemoteControlEvents()
 
+        setupRemoteTransportControls()
+        
         self.player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: .main) { time in
             Task { @MainActor in
                 self.currentTime = time
@@ -110,7 +120,16 @@ final class MusicTabViewModel: ObservableObject {
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(itemDidFinishPlaying(_:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-
+        
+        Task {
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.playback)
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                print(error)
+            }
+        }
+        
         Task {
             do {
                 let trackModels: [FirestoreTrackModel] = try await dependencies.firestoreManager.get()
@@ -136,7 +155,99 @@ final class MusicTabViewModel: ObservableObject {
         if repeatOption == .repeatOne {
             playAgain()
         } else {
-            next()
+            try? next()
+        }
+    }
+    
+    private func setupRemoteTransportControls() {
+        // Get the shared MPRemoteCommandCenter
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.changePlaybackPositionCommand.isEnabled = true
+
+        // Add handler for Play Command
+        commandCenter.playCommand.addTarget { [weak self] event in
+            if let self, let track = self.trackPlaying {
+                self.play(track)
+                return .success
+            }
+            return .noSuchContent
+        }
+        
+        // Add handler for Pause Command
+        commandCenter.pauseCommand.addTarget { [weak self] event in
+            if let self {
+                self.pause()
+                return .success
+            }
+            return .noSuchContent
+        }
+        
+        commandCenter.nextTrackCommand.addTarget { [weak self] event in
+            if let self {
+                do {
+                    try self.next()
+                    return .success
+                } catch {
+                    return .noSuchContent
+                }
+            }
+            return .noSuchContent
+        }
+        
+        commandCenter.previousTrackCommand.addTarget { [weak self] event in
+            if let self {
+                do {
+                    try self.prev()
+                    return .success
+                } catch {
+                    return .noSuchContent
+                }
+            }
+            return .noSuchContent
+        }
+        
+        commandCenter.changePlaybackPositionCommand.addTarget { [weak self] event in
+            if let event = event as? MPChangePlaybackPositionCommandEvent, let self {
+                // Handle the playback position change here
+                let newPosition = event.positionTime
+                Task {
+                    let time: CMTime = .init(seconds: newPosition, preferredTimescale: 600)
+                    print(time)
+                    await self.skipTo(time)
+                }
+                return .success
+            }
+            return .commandFailed
+        }
+    }
+    
+    private func configurePlayingInfo(for track: Track) {
+        var nowPlayingInfo = [String: Any]()
+        
+        nowPlayingInfo[MPMediaItemPropertyTitle] = track.title
+        nowPlayingInfo[MPMediaItemPropertyGenre] = track.genre
+        nowPlayingInfo[MPMediaItemPropertyAssetURL] = track.audio
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = track.duration.seconds
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime.seconds
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+
+
+        if let savedImage = cacheManager.getFrom(cacheManager.artWorkCache, forKey: track.id) {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: savedImage.size) { _ in
+                savedImage
+            }
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        } else {
+            Task {
+                if let data = try? await URLSession.shared.data(from: track.artwork).0,
+                   let image = UIImage(data: data) {
+                    cacheManager.addTo(cacheManager.artWorkCache, forKey: track.id, value: image)
+                    nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in
+                        image
+                    }
+                    MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+                }
+            }
         }
     }
     
@@ -206,6 +317,7 @@ final class MusicTabViewModel: ObservableObject {
         }
         trackPlayingID = track.id
         player.play()
+        configurePlayingInfo(for: track)
         isPlaying = true
         checkAutoplay()
     }
@@ -215,11 +327,11 @@ final class MusicTabViewModel: ObservableObject {
         isPlaying = false
     }
     
-    func prev() {
+    func prev() throws {
         if currentTime.seconds > 2 {
             startAgain()
         } else {
-            previousTrack()
+            try previousTrack()
         }
     }
     
@@ -240,8 +352,8 @@ final class MusicTabViewModel: ObservableObject {
         player.seek(to: .zero)
     }
     
-    private func previousTrack() {
-        guard let current = trackPlaying, let prevTrack = history.popLast() else { return }
+    private func previousTrack() throws {
+        guard let current = trackPlaying, let prevTrack = history.popLast() else { throw PlayerError.noPrevTrackInHistory }
         addToStart(QueueElement(track: current))
         play(prevTrack)
     }
@@ -268,15 +380,20 @@ final class MusicTabViewModel: ObservableObject {
         }
     }
     
-    func next() {
+    func next() throws {
         guard let nextTrackFromQueue = queue.first?.track else {
             startAgain()
             player.pause()
             isPlaying = false
-            return
+            throw PlayerError.noNextTrackInQueue
         }
         moveCurrentTrackToHistory()
         deleteFirstTrackFromQueue(track: nextTrackFromQueue)
         play(nextTrackFromQueue)
+    }
+    
+    enum PlayerError: Error {
+        case noPrevTrackInHistory
+        case noNextTrackInQueue
     }
 }
