@@ -46,6 +46,11 @@ struct SmallWidgetView: View {
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
+        .background {
+            FancyBackground(blobSize: 15, quantity: 16, randomOpacity: true, staticView: true)
+                .opacity(0.5)
+                .blur(radius: 0.5)
+        }
     }
 }
 
@@ -72,12 +77,10 @@ struct MediumWidgetView: View {
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
-
+        .background {
+            FancyBackground(blobSize: 20, quantity: 36, randomOpacity: true, staticView: true)
+                .opacity(0.5)
+                .blur(radius: 0.5)
+        }
     }
-}
-
-#Preview(as: .systemMedium) {
-    MotiFy_Widget()
-} timeline: {
-    DataEntry.placeholderInstance
 }

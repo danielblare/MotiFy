@@ -34,86 +34,105 @@ struct Time {
 struct TimerTabView: View {
     @State private var timer: Timer? = nil
     @State private var isTimerRunning = false
-    @State private var showTimer = false
+    @State private var showTimer = false {
+        didSet {
+            if showTimer {
+                title = textField
+            } else {
+                title = "Timer"
+            }
+        }
+    }
 
     @State private var selectedTime: Time = .init()
     @State private var remainingTime: Time = .init()
     
+    @State private var title: String = "Timer"
+    @State private var textField: String = ""
 
     var body: some View {
-        VStack {
-            Text("Timer")
-                .font(.title2)
-                .foregroundStyle(.accent)
-
-            Group {
-                if showTimer {
-                    Text(remainingTime.formatted)
-                        .font(.system(size: 70))
-                        .monospacedDigit()
-                } else {
-                    HStack(spacing: 0) {
-                        Picker("Hours", selection: $selectedTime.hours) {
-                            ForEach(0..<24) {
-                                Text("\($0)")
+        NavigationStack {
+            VStack {
+                
+                if !showTimer {
+                    TextField("Enter Name", text: $textField)
+                        .font(.title)
+                        .multilineTextAlignment(.center)
+                        .padding(.top)
+                }
+                
+                
+                Group {
+                    if showTimer {
+                        Text(remainingTime.formatted)
+                            .font(.system(size: 70))
+                            .monospacedDigit()
+                    } else {
+                        HStack(spacing: 0) {
+                            Picker("Hours", selection: $selectedTime.hours) {
+                                ForEach(0..<24) {
+                                    Text("\($0)")
+                                }
                             }
-                        }
-                        .overlay(alignment: .trailing) {
-                            Text("h")
-                                .padding(.trailing)
-                        }
-                        
-                        Picker("Minutes", selection: $selectedTime.minutes) {
-                            ForEach(0..<60) {
-                                Text("\($0)")
+                            .overlay(alignment: .trailing) {
+                                Text("h")
+                                    .padding(.trailing)
                             }
-                        }
-                        .overlay(alignment: .trailing) {
-                            Text("m")
-                                .padding(.trailing)
-                        }
-
-                        Picker("Seconds", selection: $selectedTime.seconds) {
-                            ForEach(0..<60) {
-                                Text("\($0)")
+                            
+                            Picker("Minutes", selection: $selectedTime.minutes) {
+                                ForEach(0..<60) {
+                                    Text("\($0)")
+                                }
                             }
+                            .overlay(alignment: .trailing) {
+                                Text("m")
+                                    .padding(.trailing)
+                            }
+                            
+                            Picker("Seconds", selection: $selectedTime.seconds) {
+                                ForEach(0..<60) {
+                                    Text("\($0)")
+                                }
+                            }
+                            .overlay(alignment: .trailing) {
+                                Text("s")
+                                    .padding(.trailing)
+                            }
+                            
                         }
-                        .overlay(alignment: .trailing) {
-                            Text("s")
-                                .padding(.trailing)
-                        }
-
+                        .pickerStyle(.inline)
                     }
-                    .pickerStyle(.inline)
+                }
+                .frame(height: 300)
+                
+                HStack {
+                    
+                    Button("Cancel", role: .destructive, action: cancelTimer)
+                        .disabled(isTimerRunning)
+                    
+                    Spacer(minLength: 0)
+                    
+                    Button(isTimerRunning ? "Pause" : "Start", action: isTimerRunning ? pauseTimer : startTimer) .foregroundStyle(isTimerRunning ? .yellow : .green)
+                }
+                .buttonStyle(.bordered)
+                .padding()
+                .animation(nil, value: showTimer)
+                .animation(nil, value: isTimerRunning)
+                
+                Spacer()
+            }
+            .padding()
+            .animation(.bouncy, value: showTimer)
+            .background {
+                if isTimerRunning {
+                    FancyBackground()
+                        .blur(radius: 3)
                 }
             }
-            .frame(height: 300)
-
-            HStack {
-                
-                Button("Cancel", role: .destructive, action: cancelTimer)
-                    .disabled(isTimerRunning)
-                
-                Spacer(minLength: 0)
-                
-                Button(isTimerRunning ? "Pause" : "Start", action: isTimerRunning ? pauseTimer : startTimer) .foregroundStyle(isTimerRunning ? .yellow : .green)
-            }
-            .buttonStyle(.bordered)
-            .padding()
-            .animation(nil, value: showTimer)
-            .animation(nil, value: isTimerRunning)
-
-            Spacer()
+            .animation(.bouncy, value: isTimerRunning)
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(showTimer ? .large : .inline)
         }
-        .padding()
-        .animation(.bouncy, value: showTimer)
-        .background {
-            if isTimerRunning {
-                FancyBackground()
-                    .blur(radius: 3)
-            }
-        }
-        .animation(.bouncy, value: isTimerRunning)
     }
     
     private func startTimer() {

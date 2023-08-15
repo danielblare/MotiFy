@@ -16,9 +16,10 @@ final class QuoteTabViewModel: ObservableObject {
       
     init() {
         if let data = UserDefaults.standard.data(forKey: "quote"),
-           let quote = try? JSONDecoder().decode(QuoteHolder.self, from: data) {
-            self.quoteHolder = quote
+           let holder = try? JSONDecoder().decode(QuoteHolder.self, from: data) {
+            self.quoteHolder = holder
         }
+
         
         guard let quoteHolder, Calendar.current.isDateInToday(quoteHolder.dateUpdated) else {
             Task {

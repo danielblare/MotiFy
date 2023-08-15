@@ -33,6 +33,9 @@
 		BB40A7D72A8BAEF00029E069 /* QuoteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB40A7D62A8BAEF00029E069 /* QuoteManager.swift */; };
 		BB40A7D82A8BAEF80029E069 /* QuoteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB40A7D62A8BAEF00029E069 /* QuoteManager.swift */; };
 		BB5C2EEE2A7E655400CE99BC /* TimerTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB5C2EED2A7E655400CE99BC /* TimerTabView.swift */; };
+		BB5DA24E2A8BD30400FB03CF /* FancyBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9CDAD72A7FA03900E0DD4B /* FancyBackground.swift */; };
+		BB5DA24F2A8BD30800FB03CF /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA191462A7FCD3400B01E46 /* Color.swift */; };
+		BB5DA2502A8BD53C00FB03CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB7300E82A7C45B2006A7020 /* Assets.xcassets */; };
 		BB65B69E2A85350700B37405 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB65B69D2A85350700B37405 /* Track.swift */; };
 		BB7300E52A7C45B0006A7020 /* MotiFyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7300E42A7C45B0006A7020 /* MotiFyApp.swift */; };
 		BB7300E72A7C45B0006A7020 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7300E62A7C45B0006A7020 /* ContentView.swift */; };
@@ -421,6 +424,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB5DA2502A8BD53C00FB03CF /* Assets.xcassets in Resources */,
 				BB40A7C32A8BA4680029E069 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -444,12 +448,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB40A7D02A8BA5170029E069 /* Provider.swift in Sources */,
+				BB5DA24E2A8BD30400FB03CF /* FancyBackground.swift in Sources */,
 				BB40A7CF2A8BA5130029E069 /* DataEntry.swift in Sources */,
 				BB40A7BF2A8BA4660029E069 /* MotiFy_WidgetBundle.swift in Sources */,
 				BB40A7D82A8BAEF80029E069 /* QuoteManager.swift in Sources */,
 				BB40A7C12A8BA4660029E069 /* MotiFy_Widget.swift in Sources */,
 				BB40A7D32A8BA8870029E069 /* Quote.swift in Sources */,
 				BB40A7D22A8BA5530029E069 /* WidgetView.swift in Sources */,
+				BB5DA24F2A8BD30800FB03CF /* Color.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +511,7 @@
 				INFOPLIST_FILE = MotiFy_Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MotiFy_Widget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -514,9 +521,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stuffeddanny.MotiFy.MotiFy-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -533,6 +544,7 @@
 				INFOPLIST_FILE = MotiFy_Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MotiFy_Widget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -542,9 +554,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stuffeddanny.MotiFy.MotiFy-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
