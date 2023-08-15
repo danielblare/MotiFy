@@ -21,42 +21,22 @@ final class QuoteTabViewModel: ObservableObject {
         }
         
         guard let quoteHolder, Calendar.current.isDateInToday(quoteHolder.dateUpdated) else {
-            fetchQuote()
+            Task {
+                do {
+                    let holder = try await QuoteManager.shared.fetchQuote()
+                    
+                    let data = try JSONEncoder().encode(holder)
+                    UserDefaults.standard.setValue(data, forKey: "quote")
+                    
+                    self.quoteHolder = holder
+
+                } catch {
+                    print(error)
+                }
+            }
             return
         }
     }
-    
-    func fetchQuote() {
-        print("Fetching")
-        let headers = [
-            "X-RapidAPI-Key": "2366186accmsh184e71bf5cce5d0p15ee0djsn01dfff778bdc",
-            "X-RapidAPI-Host": "quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com"
-        ]
-        
-        var request = URLRequest(url: URL(string: "https://quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com/quote?token=ipworld.info")!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-        request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headers
-
-        Task {
-            do {
-                let result = try await URLSession.shared.data(for: request)
-                let quote = try JSONDecoder().decode(Quote.self, from: result.0)
-                
-                let holder = QuoteHolder(dateUpdated: .now, quote: quote)
-                
-                let data = try JSONEncoder().encode(holder)
-                UserDefaults.standard.setValue(data, forKey: "quote")
-                
-                self.quoteHolder = holder
-                
-            } catch {
-                alert = AlertData(title: "Error while fetching quote", message: error.localizedDescription)
-            }
-        }
-
-    }
-    
-    
 }
 
 struct QuoteTabView: View {
@@ -93,6 +73,7 @@ struct QuoteTabView: View {
                     .padding(.vertical)
                 
                 Text("- \(quote.author)")
+                    .lineLimit(1)
                     .fontDesign(.serif)
                     .italic()
                     .foregroundStyle(.secondary)

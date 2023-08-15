@@ -20,6 +20,18 @@
 		BB3563D62A81508D00D56250 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3563D52A81508D00D56250 /* FirestoreManager.swift */; };
 		BB3563D82A815A3C00D56250 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3563D72A815A3C00D56250 /* StorageManager.swift */; };
 		BB3563DA2A81686B00D56250 /* MusicPlayingAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3563D92A81686B00D56250 /* MusicPlayingAnimation.swift */; };
+		BB40A7BA2A8BA4660029E069 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB40A7B92A8BA4660029E069 /* WidgetKit.framework */; };
+		BB40A7BC2A8BA4660029E069 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB40A7BB2A8BA4660029E069 /* SwiftUI.framework */; };
+		BB40A7BF2A8BA4660029E069 /* MotiFy_WidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB40A7BE2A8BA4660029E069 /* MotiFy_WidgetBundle.swift */; };
+		BB40A7C12A8BA4660029E069 /* MotiFy_Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB40A7C02A8BA4660029E069 /* MotiFy_Widget.swift */; };
+		BB40A7C32A8BA4680029E069 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB40A7C22A8BA4680029E069 /* Assets.xcassets */; };
+		BB40A7C72A8BA4680029E069 /* MotiFy_WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BB40A7B72A8BA4660029E069 /* MotiFy_WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BB40A7CF2A8BA5130029E069 /* DataEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB40A7CE2A8BA5130029E069 /* DataEntry.swift */; };
+		BB40A7D02A8BA5170029E069 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB40A7CC2A8BA4A60029E069 /* Provider.swift */; };
+		BB40A7D22A8BA5530029E069 /* WidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB40A7D12A8BA5530029E069 /* WidgetView.swift */; };
+		BB40A7D32A8BA8870029E069 /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE2B56C2A7D8BD600264BF5 /* Quote.swift */; };
+		BB40A7D72A8BAEF00029E069 /* QuoteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB40A7D62A8BAEF00029E069 /* QuoteManager.swift */; };
+		BB40A7D82A8BAEF80029E069 /* QuoteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB40A7D62A8BAEF00029E069 /* QuoteManager.swift */; };
 		BB5C2EEE2A7E655400CE99BC /* TimerTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB5C2EED2A7E655400CE99BC /* TimerTabView.swift */; };
 		BB65B69E2A85350700B37405 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB65B69D2A85350700B37405 /* Track.swift */; };
 		BB7300E52A7C45B0006A7020 /* MotiFyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7300E42A7C45B0006A7020 /* MotiFyApp.swift */; };
@@ -38,6 +50,30 @@
 		BBF38DD42A82718E009EE1A8 /* MusicTabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF38DD32A82718E009EE1A8 /* MusicTabViewModel.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		BB40A7C52A8BA4680029E069 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BB7300D92A7C45B0006A7020 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BB40A7B62A8BA4660029E069;
+			remoteInfo = MotiFy_WidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BB40A7C82A8BA4680029E069 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BB40A7C72A8BA4680029E069 /* MotiFy_WidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		BB31BCA42A82A76C007DBF67 /* CMTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTime.swift; sourceTree = "<group>"; };
 		BB3428CD2A8112B200243DDA /* MusicTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabView.swift; sourceTree = "<group>"; };
@@ -47,6 +83,19 @@
 		BB3563D52A81508D00D56250 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		BB3563D72A815A3C00D56250 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		BB3563D92A81686B00D56250 /* MusicPlayingAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayingAnimation.swift; sourceTree = "<group>"; };
+		BB40A7B72A8BA4660029E069 /* MotiFy_WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MotiFy_WidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB40A7B92A8BA4660029E069 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		BB40A7BB2A8BA4660029E069 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		BB40A7BE2A8BA4660029E069 /* MotiFy_WidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotiFy_WidgetBundle.swift; sourceTree = "<group>"; };
+		BB40A7C02A8BA4660029E069 /* MotiFy_Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotiFy_Widget.swift; sourceTree = "<group>"; };
+		BB40A7C22A8BA4680029E069 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BB40A7C42A8BA4680029E069 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB40A7CC2A8BA4A60029E069 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
+		BB40A7CE2A8BA5130029E069 /* DataEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataEntry.swift; sourceTree = "<group>"; };
+		BB40A7D12A8BA5530029E069 /* WidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetView.swift; sourceTree = "<group>"; };
+		BB40A7D42A8BAC290029E069 /* MotiFy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MotiFy.entitlements; sourceTree = "<group>"; };
+		BB40A7D52A8BAC500029E069 /* MotiFy_WidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MotiFy_WidgetExtension.entitlements; sourceTree = "<group>"; };
+		BB40A7D62A8BAEF00029E069 /* QuoteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteManager.swift; sourceTree = "<group>"; };
 		BB5C2EED2A7E655400CE99BC /* TimerTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTabView.swift; sourceTree = "<group>"; };
 		BB65B69D2A85350700B37405 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		BB7300E12A7C45B0006A7020 /* MotiFy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotiFy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,6 +117,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		BB40A7B42A8BA4660029E069 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB40A7BC2A8BA4660029E069 /* SwiftUI.framework in Frameworks */,
+				BB40A7BA2A8BA4660029E069 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BB7300DE2A7C45B0006A7020 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,8 +195,32 @@
 				BB3563D52A81508D00D56250 /* FirestoreManager.swift */,
 				BB3563D72A815A3C00D56250 /* StorageManager.swift */,
 				BBD551692A83B63500AECB9E /* CacheManager.swift */,
+				BB40A7D62A8BAEF00029E069 /* QuoteManager.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		BB40A7B82A8BA4660029E069 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BB40A7B92A8BA4660029E069 /* WidgetKit.framework */,
+				BB40A7BB2A8BA4660029E069 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BB40A7BD2A8BA4660029E069 /* MotiFy_Widget */ = {
+			isa = PBXGroup;
+			children = (
+				BB40A7BE2A8BA4660029E069 /* MotiFy_WidgetBundle.swift */,
+				BB40A7C02A8BA4660029E069 /* MotiFy_Widget.swift */,
+				BB40A7C22A8BA4680029E069 /* Assets.xcassets */,
+				BB40A7C42A8BA4680029E069 /* Info.plist */,
+				BB40A7CC2A8BA4A60029E069 /* Provider.swift */,
+				BB40A7CE2A8BA5130029E069 /* DataEntry.swift */,
+				BB40A7D12A8BA5530029E069 /* WidgetView.swift */,
+			);
+			path = MotiFy_Widget;
 			sourceTree = "<group>";
 		};
 		BB5C2EEC2A7E653C00CE99BC /* TimerTab */ = {
@@ -152,7 +234,10 @@
 		BB7300D82A7C45B0006A7020 = {
 			isa = PBXGroup;
 			children = (
+				BB40A7D52A8BAC500029E069 /* MotiFy_WidgetExtension.entitlements */,
 				BB7300E32A7C45B0006A7020 /* MotiFy */,
+				BB40A7BD2A8BA4660029E069 /* MotiFy_Widget */,
+				BB40A7B82A8BA4660029E069 /* Frameworks */,
 				BB7300E22A7C45B0006A7020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -161,6 +246,7 @@
 			isa = PBXGroup;
 			children = (
 				BB7300E12A7C45B0006A7020 /* MotiFy.app */,
+				BB40A7B72A8BA4660029E069 /* MotiFy_WidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -168,6 +254,7 @@
 		BB7300E32A7C45B0006A7020 /* MotiFy */ = {
 			isa = PBXGroup;
 			children = (
+				BB40A7D42A8BAC290029E069 /* MotiFy.entitlements */,
 				BBF24F782A894BB00022C93A /* Info.plist */,
 				BB34F51E2A891B7E0012EB53 /* Launch */,
 				BBE5EF892A87C809004F6D97 /* Services */,
@@ -246,6 +333,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		BB40A7B62A8BA4660029E069 /* MotiFy_WidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BB40A7CB2A8BA4680029E069 /* Build configuration list for PBXNativeTarget "MotiFy_WidgetExtension" */;
+			buildPhases = (
+				BB40A7B32A8BA4660029E069 /* Sources */,
+				BB40A7B42A8BA4660029E069 /* Frameworks */,
+				BB40A7B52A8BA4660029E069 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MotiFy_WidgetExtension;
+			productName = MotiFy_WidgetExtension;
+			productReference = BB40A7B72A8BA4660029E069 /* MotiFy_WidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		BB7300E02A7C45B0006A7020 /* MotiFy */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BB7300EF2A7C45B2006A7020 /* Build configuration list for PBXNativeTarget "MotiFy" */;
@@ -253,10 +357,12 @@
 				BB7300DD2A7C45B0006A7020 /* Sources */,
 				BB7300DE2A7C45B0006A7020 /* Frameworks */,
 				BB7300DF2A7C45B0006A7020 /* Resources */,
+				BB40A7C82A8BA4680029E069 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BB40A7C62A8BA4680029E069 /* PBXTargetDependency */,
 			);
 			name = MotiFy;
 			packageProductDependencies = (
@@ -280,6 +386,9 @@
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
+					BB40A7B62A8BA4660029E069 = {
+						CreatedOnToolsVersion = 15.0;
+					};
 					BB7300E02A7C45B0006A7020 = {
 						CreatedOnToolsVersion = 15.0;
 					};
@@ -302,11 +411,20 @@
 			projectRoot = "";
 			targets = (
 				BB7300E02A7C45B0006A7020 /* MotiFy */,
+				BB40A7B62A8BA4660029E069 /* MotiFy_WidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		BB40A7B52A8BA4660029E069 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB40A7C32A8BA4680029E069 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BB7300DF2A7C45B0006A7020 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -321,6 +439,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		BB40A7B32A8BA4660029E069 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB40A7D02A8BA5170029E069 /* Provider.swift in Sources */,
+				BB40A7CF2A8BA5130029E069 /* DataEntry.swift in Sources */,
+				BB40A7BF2A8BA4660029E069 /* MotiFy_WidgetBundle.swift in Sources */,
+				BB40A7D82A8BAEF80029E069 /* QuoteManager.swift in Sources */,
+				BB40A7C12A8BA4660029E069 /* MotiFy_Widget.swift in Sources */,
+				BB40A7D32A8BA8870029E069 /* Quote.swift in Sources */,
+				BB40A7D22A8BA5530029E069 /* WidgetView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BB7300DD2A7C45B0006A7020 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -342,6 +474,7 @@
 				BB3563DA2A81686B00D56250 /* MusicPlayingAnimation.swift in Sources */,
 				BBD5516A2A83B63500AECB9E /* CacheManager.swift in Sources */,
 				BB7300F72A7C5807006A7020 /* LoadingBouncyView.swift in Sources */,
+				BB40A7D72A8BAEF00029E069 /* QuoteManager.swift in Sources */,
 				BB31BCA52A82A76C007DBF67 /* CMTime.swift in Sources */,
 				BB3563D62A81508D00D56250 /* FirestoreManager.swift in Sources */,
 				BBE5EF8B2A87C814004F6D97 /* HapticService.swift in Sources */,
@@ -350,7 +483,71 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		BB40A7C62A8BA4680029E069 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BB40A7B62A8BA4660029E069 /* MotiFy_WidgetExtension */;
+			targetProxy = BB40A7C52A8BA4680029E069 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		BB40A7C92A8BA4680029E069 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MotiFy_WidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VFJ7656544;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MotiFy_Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MotiFy_Widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stuffeddanny.MotiFy.MotiFy-Widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BB40A7CA2A8BA4680029E069 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MotiFy_WidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VFJ7656544;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MotiFy_Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MotiFy_Widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stuffeddanny.MotiFy.MotiFy-Widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		BB7300ED2A7C45B2006A7020 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -475,8 +672,10 @@
 		BB7300F02A7C45B2006A7020 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MotiFy/MotiFy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MotiFy/Preview Content\"";
@@ -512,8 +711,10 @@
 		BB7300F12A7C45B2006A7020 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MotiFy/MotiFy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MotiFy/Preview Content\"";
@@ -549,6 +750,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		BB40A7CB2A8BA4680029E069 /* Build configuration list for PBXNativeTarget "MotiFy_WidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BB40A7C92A8BA4680029E069 /* Debug */,
+				BB40A7CA2A8BA4680029E069 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		BB7300DC2A7C45B0006A7020 /* Build configuration list for PBXProject "MotiFy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -53,7 +53,6 @@ struct MotiFyApp: App {
                     .zIndex(1.0)
             } else {
                 ContentView(with: dependencies)
-                
             }
         }
     }
