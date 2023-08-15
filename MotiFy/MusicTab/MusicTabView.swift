@@ -334,6 +334,7 @@ struct MusicTabView: View {
             HStack {
                 
                 Button {
+                    HapticService.shared.impact(style: .light)
                     viewModel.toggleAutoplay()
                 } label: {
                     ZStack {
@@ -356,6 +357,7 @@ struct MusicTabView: View {
                 Spacer()
 
                 Button {
+                    HapticService.shared.impact(style: .light)
                     try? viewModel.prev()
                 } label: {
                     Image(systemName: "backward.fill")
@@ -365,6 +367,7 @@ struct MusicTabView: View {
                 
                 Button {
                     if let track {
+                        HapticService.shared.impact(style: .light)
                         viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
                     }
                 } label: {
@@ -383,6 +386,7 @@ struct MusicTabView: View {
                 .padding(.horizontal)
                 
                 Button {
+                    HapticService.shared.impact(style: .light)
                     try? viewModel.next()
                 } label: {
                     Image(systemName: "forward.fill")
@@ -393,6 +397,7 @@ struct MusicTabView: View {
                 Spacer()
                 
                 Button {
+                    HapticService.shared.impact(style: .light)
                     viewModel.nextRepeatOption()
                 } label: {
                     viewModel.repeatOption.icon

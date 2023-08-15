@@ -58,7 +58,7 @@ struct LaunchView: View {
             withAnimation(.smooth(duration: 0.2)) {
                 logoScale = 0
             }
-            try? await Task.sleep(for: .seconds(0.2))
+            try? await Task.sleep(for: .seconds(0.3))
             
             withAnimation {
                 showLaunchView = false

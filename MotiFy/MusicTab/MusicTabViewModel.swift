@@ -228,7 +228,6 @@ final class MusicTabViewModel: ObservableObject {
         nowPlayingInfo[MPMediaItemPropertyGenre] = track.genre
         nowPlayingInfo[MPMediaItemPropertyAssetURL] = track.audio
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = track.duration.seconds
-        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime.seconds
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
 
 
