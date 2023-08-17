@@ -94,6 +94,7 @@ struct TimerTabView: View {
                             
                         }
                         .pickerStyle(.inline)
+                        .monospacedDigit()
                     }
                 }
                 .frame(height: 300)

@@ -44,6 +44,7 @@ struct ActivityEditor: View {
                     Spacer(minLength: 0)
                     
                     TimeSelector(time: $activity.defaultTime)
+                        .frame(height: 100)
                 }
             } footer: {
                 Text("Defaut time set for this activity")
