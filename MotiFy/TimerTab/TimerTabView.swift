@@ -7,69 +7,62 @@
 
 import SwiftUI
 
-struct Time {
-    var hours: Int
-    var minutes: Int
-    var seconds: Int
-    
-    var timeInterval: TimeInterval {
-        TimeInterval(hours * 3600 + minutes * 60 + seconds)
-    }
-    
-    var formatted: String {
-        let formattedHours = String(format: "%02d", hours)
-        let formattedMinutes = String(format: "%02d", minutes)
-        let formattedSeconds = String(format: "%02d", seconds)
-        return "\(formattedHours):\(formattedMinutes):\(formattedSeconds)"
-    }
-
-    init(hours: Int = 0, minutes: Int = 0, seconds: Int = 0) {
-        self.hours = hours
-        self.minutes = minutes
-        self.seconds = seconds
-    }
-    
-}
-
 struct TimerTabView: View {
-    @State private var timer: Timer? = nil
-    @State private var isTimerRunning = false
-    @State private var showTimer = false {
-        didSet {
-            if showTimer {
-                title = textField
-            } else {
-                title = "Timer"
-            }
-        }
-    }
-
-    @State private var selectedTime: Time = .init()
-    @State private var remainingTime: Time = .init()
     
-    @State private var title: String = "Timer"
-    @State private var textField: String = ""
-
+    @StateObject private var viewModel: TimerTabViewModel = TimerTabViewModel()
+    
+    @State private var showCategoriesEditor: Bool = false
+    
     var body: some View {
         NavigationStack {
             VStack {
                 
-                if !showTimer {
-                    TextField("Enter Name", text: $textField)
+                if !viewModel.showTimer {
+                    Menu {
+                        ForEach(viewModel.activities) { activity in
+                            Button {
+                                if viewModel.selectedActivity == activity {
+                                    viewModel.unselect()
+                                } else {
+                                    viewModel.select(activity)
+                                }
+                            } label: {
+                                Label(activity.name, systemImage: viewModel.selectedActivity == activity ? "checkmark" : "")
+                            }
+                        }
+                        
+                        Divider()
+                        
+                        Button {
+                            showCategoriesEditor = true
+                        } label: {
+                            Label("Edit", systemImage: "square.and.pencil")
+                        }
+                    } label: {
+                        HStack {
+                            Text("Activity: \(viewModel.selectedActivity?.name ?? "None")")
+                            
+                            Image(systemName: "chevron.up.chevron.down")
+                        }
+                    }
+                    .tint(.secondary)
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                } else {
+                    Text(viewModel.selectedActivity?.displayText ?? "")
                         .font(.title)
+                        .fontWeight(.semibold)
                         .multilineTextAlignment(.center)
-                        .padding(.top)
                 }
                 
-                
                 Group {
-                    if showTimer {
-                        Text(remainingTime.formatted)
+                    if viewModel.showTimer {
+                        Text(viewModel.remainingTime.formatted)
                             .font(.system(size: 70))
                             .monospacedDigit()
                     } else {
                         HStack(spacing: 0) {
-                            Picker("Hours", selection: $selectedTime.hours) {
+                            Picker("Hours", selection: $viewModel.selectedTime.hours) {
                                 ForEach(0..<24) {
                                     Text("\($0)")
                                 }
@@ -79,7 +72,7 @@ struct TimerTabView: View {
                                     .padding(.trailing)
                             }
                             
-                            Picker("Minutes", selection: $selectedTime.minutes) {
+                            Picker("Minutes", selection: $viewModel.selectedTime.minutes) {
                                 ForEach(0..<60) {
                                     Text("\($0)")
                                 }
@@ -89,7 +82,7 @@ struct TimerTabView: View {
                                     .padding(.trailing)
                             }
                             
-                            Picker("Seconds", selection: $selectedTime.seconds) {
+                            Picker("Seconds", selection: $viewModel.selectedTime.seconds) {
                                 ForEach(0..<60) {
                                     Text("\($0)")
                                 }
@@ -107,77 +100,75 @@ struct TimerTabView: View {
                 
                 HStack {
                     
-                    Button("Cancel", role: .destructive, action: cancelTimer)
-                        .disabled(isTimerRunning)
+                    Button("Cancel", role: .destructive) {
+                        viewModel.cancelTimer()
+                    }
+                    .disabled(viewModel.isTimerRunning)
                     
                     Spacer(minLength: 0)
                     
-                    Button(isTimerRunning ? "Pause" : "Start", action: isTimerRunning ? pauseTimer : startTimer) .foregroundStyle(isTimerRunning ? .yellow : .green)
+                    Button(viewModel.isTimerRunning ? "Pause" : "Start") {
+                        viewModel.isTimerRunning ? viewModel.pauseTimer() : viewModel.startTimer()
+                    }
+                    .foregroundStyle(viewModel.isTimerRunning ? .yellow : .green)
                 }
                 .buttonStyle(.bordered)
                 .padding()
-                .animation(nil, value: showTimer)
-                .animation(nil, value: isTimerRunning)
+                .animation(nil, value: viewModel.showTimer)
+                .animation(nil, value: viewModel.isTimerRunning)
                 
                 Spacer()
             }
             .padding()
-            .animation(.bouncy, value: showTimer)
+            .animation(.bouncy, value: viewModel.showTimer)
             .background {
-                if isTimerRunning {
+                if viewModel.isTimerRunning {
                     FancyBackground()
                         .blur(radius: 3)
                 }
             }
-            .animation(.bouncy, value: isTimerRunning)
-            .navigationTitle(title)
-            .navigationBarTitleDisplayMode(showTimer ? .large : .inline)
-        }
-    }
-    
-    private func startTimer() {
-        guard timer == nil, selectedTime.timeInterval > 0 else {
-            return
-        }
-        if !showTimer {
-            remainingTime = selectedTime
-        }
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if remainingTime.timeInterval > 0 {
-                if remainingTime.seconds > 0 {
-                    remainingTime.seconds -= 1
-                    return
+            .animation(.bouncy, value: viewModel.isTimerRunning)
+            .sheet(isPresented: $showCategoriesEditor) {
+                NavigationStack {
+                    List {
+                        if !viewModel.activities.isEmpty {
+                            ForEach(Array(viewModel.activities.enumerated()), id: \.element.id) { index, activity in
+                                let binding = Binding<Activity> { viewModel.activities[index] } set: { viewModel.set($0, on: index) }
+                                NavigationLink {
+                                    ActivityEditor(for: binding)
+                                } label: {
+                                    Text(activity.name)
+                                }
+
+                            }
+                            .onMove { set, index in
+                                viewModel.move(from: set, to: index)
+                            }
+                            .onDelete { set in
+                                viewModel.delete(on: set)
+                            }
+                        } else {
+                            Text("No categories. Add one")
+                                .foregroundStyle(.secondary)
+                        }
+                        
+                        Section {
+                            Button {
+                                viewModel.create()
+                            } label: {
+                                Label("Add", systemImage: "plus")
+                            }
+                        }
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            EditButton()
+                        }
+                    }
                 }
-                if remainingTime.minutes > 0 {
-                    remainingTime.minutes -= 1
-                        remainingTime.seconds = 59
-                    return
-                }
-                if remainingTime.hours > 0 {
-                    remainingTime.hours -= 1
-                        remainingTime.minutes = 59
-                        remainingTime.seconds = 59
-                    return
-                }
-            } else {
-                cancelTimer()
+                .presentationDetents([.medium, .large])
             }
         }
-        isTimerRunning = true
-        showTimer = true
-    }
-    
-    func cancelTimer() {
-        timer?.invalidate()
-        timer = nil
-        isTimerRunning = false
-        showTimer = false
-    }
-    
-    func pauseTimer() {
-        timer?.invalidate()
-        timer = nil
-        isTimerRunning = false
     }
 }
 
