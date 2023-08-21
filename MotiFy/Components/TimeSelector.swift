@@ -19,7 +19,7 @@ struct TimeSelector: View {
         HStack(spacing: 0) {
             Picker("", selection: $time.hours) {
                 ForEach(0..<24) {
-                    Text("\($0)")
+                    Text($0 < 10 ? "0\($0)" : "\($0)")
                 }
             }
             .frame(width: 50)
@@ -28,7 +28,7 @@ struct TimeSelector: View {
 
             Picker("Minutes", selection: $time.minutes) {
                 ForEach(0..<60) {
-                    Text("\($0)")
+                    Text($0 < 10 ? "0\($0)" : "\($0)")
                 }
             }
             .frame(width: 50)
@@ -37,7 +37,7 @@ struct TimeSelector: View {
 
             Picker("Seconds", selection: $time.seconds) {
                 ForEach(0..<60) {
-                    Text("\($0)")
+                    Text($0 < 10 ? "0\($0)" : "\($0)")
                 }
             }
             .frame(width: 50)

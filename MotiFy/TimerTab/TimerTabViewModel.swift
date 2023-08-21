@@ -17,12 +17,28 @@ final class TimerTabViewModel: ObservableObject {
     @Published var selectedTime: Time = .init()
     @Published private(set) var remainingTime: Time = .init()
 
-    @Published private var selectedActivityID: Activity.ID?
+    // Activities
+    @Published private var selectedActivityID: Activity.ID? {
+        didSet {
+            if selectedActivityID != oldValue {
+                UserDefaults.standard.setValue(selectedActivityID, forKey: "selected_activity_id")
+            }
+        }
+    }
     var selectedActivity: Activity? {
         activities.first(where: { $0.id == selectedActivityID })
     }
-    @Published var activities: [Activity] = []
-
+    @Published var activities: [Activity] = [] {
+        didSet {
+            if activities != oldValue, let data = try? JSONEncoder().encode(activities) {
+                UserDefaults.standard.setValue(data, forKey: "activities")
+            }
+        }
+    }
+    
+    @Published private(set) var badge: Int = 0
+    
+    private var onScreen: Bool = true
     
     init() {
         if let data = UserDefaults.standard.data(forKey: "activities"),
@@ -37,6 +53,53 @@ final class TimerTabViewModel: ObservableObject {
                 UserDefaults.standard.removeObject(forKey: "selected_activity_id")
             }
         }
+        
+        if let selectedActivity {
+            selectedTime = selectedActivity.defaultTime
+        }
+        
+        Task {
+            try? await NotificationService.shared.requestAuthorization()
+        }
+        
+        NotificationService.shared.removeAllPendingNotifications()
+                
+        if let backgroundTime = UserDefaults.standard.object(forKey: "BackgroundTime") as? Date,
+           let storedRemainingTime = UserDefaults.standard.object(forKey: "RemainingTime") as? TimeInterval {
+            
+            let timeInBackground = Date().timeIntervalSince(backgroundTime)
+            let updatedRemainingTime = max(storedRemainingTime - timeInBackground, 0)
+            if updatedRemainingTime > 0 {
+                selectedTime = Time(from: updatedRemainingTime)
+                startTimer()
+            }
+            
+            UserDefaults.standard.removeObject(forKey: "BackgroundTime")
+            UserDefaults.standard.removeObject(forKey: "RemainingTime")
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+    
+    func disappearing() {
+        onScreen = false
+    }
+    
+    func appearing() {
+        onScreen = true
+        badge = 0
+    }
+    
+    @objc private func appDidEnterBackground() {
+        if isTimerRunning {
+            UserDefaults.standard.set(Date(), forKey: "BackgroundTime")
+            UserDefaults.standard.set(remainingTime.timeInterval, forKey: "RemainingTime")
+                        
+            let date = Date().addingTimeInterval(remainingTime.timeInterval)
+            Task {
+                try? await NotificationService.shared.scheduleNotification(for: date, activity: selectedActivity)
+            }
+        }
     }
     
     func delete(on set: IndexSet) {
@@ -47,6 +110,7 @@ final class TimerTabViewModel: ObservableObject {
     
     func unselect() {
         selectedActivityID = nil
+        selectedTime = .init()
     }
     
     func move(from set: IndexSet, to index: Int) {
@@ -95,6 +159,9 @@ final class TimerTabViewModel: ObservableObject {
                         return
                     }
                 } else {
+                    if !self.onScreen {
+                        self.badge = 1
+                    }
                     self.cancelTimer()
                 }
             }

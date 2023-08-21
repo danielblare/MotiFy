@@ -28,4 +28,11 @@ struct Time: Codable, Equatable, Hashable {
         self.minutes = minutes
         self.seconds = seconds
     }
+    
+    init(from interval: TimeInterval) {
+        let totalSeconds = Int(interval)
+        self.hours = totalSeconds / 3600
+        self.minutes = (totalSeconds % 3600) / 60
+        self.seconds = totalSeconds % 60
+    }
 }

@@ -50,6 +50,7 @@
 		BBA191472A7FCD3400B01E46 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA191462A7FCD3400B01E46 /* Color.swift */; };
 		BBA843472A8E731800DD0D80 /* TimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA843462A8E731800DD0D80 /* TimeSelector.swift */; };
 		BBA843492A8E7F9B00DD0D80 /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA843482A8E7F9B00DD0D80 /* Time.swift */; };
+		BBB85E3A2A929C3D0049E6D4 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB85E392A929C3D0049E6D4 /* NotificationService.swift */; };
 		BBD5516A2A83B63500AECB9E /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD551692A83B63500AECB9E /* CacheManager.swift */; };
 		BBE2B56A2A7D88F500264BF5 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE2B5692A7D88F500264BF5 /* View.swift */; };
 		BBE2B56D2A7D8BD600264BF5 /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE2B56C2A7D8BD600264BF5 /* Quote.swift */; };
@@ -120,6 +121,7 @@
 		BBA191462A7FCD3400B01E46 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		BBA843462A8E731800DD0D80 /* TimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSelector.swift; sourceTree = "<group>"; };
 		BBA843482A8E7F9B00DD0D80 /* Time.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
+		BBB85E392A929C3D0049E6D4 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		BBD551692A83B63500AECB9E /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		BBE2B5692A7D88F500264BF5 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		BBE2B56C2A7D8BD600264BF5 /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
@@ -344,6 +346,7 @@
 			isa = PBXGroup;
 			children = (
 				BBE5EF8A2A87C814004F6D97 /* HapticService.swift */,
+				BBB85E392A929C3D0049E6D4 /* NotificationService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -482,6 +485,7 @@
 				BB34F5262A8924780012EB53 /* LaunchView.swift in Sources */,
 				BB9CDAD82A7FA03900E0DD4B /* FancyBackground.swift in Sources */,
 				BBA843472A8E731800DD0D80 /* TimeSelector.swift in Sources */,
+				BBB85E3A2A929C3D0049E6D4 /* NotificationService.swift in Sources */,
 				BB3428CE2A8112B200243DDA /* MusicTabView.swift in Sources */,
 				BB3563D82A815A3C00D56250 /* StorageManager.swift in Sources */,
 				BBA843492A8E7F9B00DD0D80 /* Time.swift in Sources */,

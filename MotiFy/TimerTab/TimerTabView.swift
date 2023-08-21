@@ -170,6 +170,13 @@ struct TimerTabView: View {
                 .presentationDetents([.medium, .large])
             }
         }
+        .badge(viewModel.badge)
+        .onAppear {
+            viewModel.appearing()
+        }
+        .onDisappear {
+            viewModel.disappearing()
+        }
     }
 }
 
