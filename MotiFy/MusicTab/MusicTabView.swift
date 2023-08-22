@@ -339,17 +339,12 @@ struct MusicTabView: View {
                 } label: {
                     ZStack {
                         Image(systemName: "arrow.triangle.2.circlepath")
-                            .resizable()
-                            .scaledToFit()
+                            .font(.title2)
                             .rotationEffect(.degrees(viewModel.autoplay ? 270 : 90))
                         
                         Image(systemName: "play.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .padding(10)
-                            .padding(.leading, 1)
+                            .font(.caption2)
                     }
-                    .frame(width: 30, height: 30)
                     .foregroundStyle(viewModel.autoplay ? Color.accentColor : .secondary)
                 }
                 .animation(.bouncy, value: viewModel.autoplay)
@@ -362,7 +357,7 @@ struct MusicTabView: View {
                 } label: {
                     Image(systemName: "backward.fill")
                         .foregroundStyle(Color.primary)
-                        .imageScale(.large)
+                        .font(.title2)
                 }
                 
                 Button {
@@ -371,17 +366,17 @@ struct MusicTabView: View {
                         viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
                     }
                 } label: {
-                    let color: Color = .accentColor
-                    
-                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundStyle(color.contrastingTextColor())
-                        .padding()
-                        .padding(.leading, viewModel.isPlaying ? 0 : 5)
-                        .frame(width: 70, height: 70)
-                        .background(color)
-                        .clipShape(Circle())
+                    ZStack {
+                        let color: Color = .accentColor
+                        
+                        Circle()
+                            .fill(color)
+                        
+                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                            .font(.system(size: 40))
+                            .foregroundStyle(color.contrastingTextColor())
+                    }
+                    .frame(width: 70, height: 70)
                 }
                 .padding(.horizontal)
                 
@@ -391,7 +386,7 @@ struct MusicTabView: View {
                 } label: {
                     Image(systemName: "forward.fill")
                         .foregroundStyle(Color.primary)
-                        .imageScale(.large)
+                        .font(.title2)
                 }
                 
                 Spacer()
@@ -401,7 +396,7 @@ struct MusicTabView: View {
                     viewModel.nextRepeatOption()
                 } label: {
                     viewModel.repeatOption.icon
-                        .imageScale(.large)
+                        .font(.title2)
                         .foregroundStyle(viewModel.repeatOption == .dontRepeat ? Color.secondary : .accent)
                 }
                 
@@ -470,30 +465,31 @@ struct MusicTabView: View {
                     try? viewModel.prev()
                 } label: {
                     Image(systemName: "backward.fill")
+                        .font(.body)
                         .foregroundStyle(Color.primary)
                 }
                 
                 Button {
                     viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
                 } label: {
-                    let color: Color = .accentColor
-                    
-                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundStyle(color.contrastingTextColor())
-                        .padding(10)
-                        .padding(.leading, viewModel.isPlaying ? 0 : 3)
-                        .frame(width: 40, height: 40)
-                        .background(color)
-                        .clipShape(Circle())
+                    ZStack {
+                        let color: Color = .accentColor
+                        
+                        Circle()
+                            .fill(color)
+                            .frame(width: 40, height: 40)
 
+                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                            .font(.title2)
+                            .foregroundStyle(color.contrastingTextColor())
+                    }
                 }
                 
                 Button {
                     try? viewModel.next()
                 } label: {
                     Image(systemName: "forward.fill")
+                        .font(.body)
                         .foregroundStyle(Color.primary)
                 }
                 
