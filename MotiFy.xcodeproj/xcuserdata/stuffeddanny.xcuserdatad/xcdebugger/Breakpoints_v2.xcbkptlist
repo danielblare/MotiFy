@@ -68,5 +68,131 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "08FE30A3-F6C3-4198-8855-B30E24D1F4BB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MotiFy/MusicTab/MusicTabViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
+            landmarkName = "init(with:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "08FE30A3-F6C3-4198-8855-B30E24D1F4BB - 959a43bbd46a07d7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #3 @Sendable () async -&gt; () in MotiFy.MusicTabViewModel.init(with: MotiFy.Dependencies) -&gt; MotiFy.MusicTabViewModel"
+                  moduleName = "MotiFy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/stuffeddanny/Library/Mobile%20Documents/com~apple~CloudDocs/Developer/MotiFy/MotiFy/MusicTab/MusicTabViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "135"
+                  endingLineNumber = "135"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  uuid = "08FE30A3-F6C3-4198-8855-B30E24D1F4BB - f22b755d4c46691e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for closure #3 @Sendable () async -&gt; () in MotiFy.MusicTabViewModel.init(with: MotiFy.Dependencies) -&gt; MotiFy.MusicTabViewModel"
+                  moduleName = "MotiFy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/stuffeddanny/Library/Mobile%20Documents/com~apple~CloudDocs/Developer/MotiFy/MotiFy/MusicTab/MusicTabViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "135"
+                  endingLineNumber = "135"
+                  offsetFromSymbolStart = "36">
+               </Location>
+               <Location
+                  uuid = "08FE30A3-F6C3-4198-8855-B30E24D1F4BB - fb2b1d7de0c563c9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #3 @Sendable () async -&gt; () in MotiFy.MusicTabViewModel.init(with: MotiFy.Dependencies) -&gt; MotiFy.MusicTabViewModel"
+                  moduleName = "MotiFy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/stuffeddanny/Library/Mobile%20Documents/com~apple~CloudDocs/Developer/MotiFy/MotiFy/MusicTab/MusicTabViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "135"
+                  endingLineNumber = "135"
+                  offsetFromSymbolStart = "148">
+               </Location>
+               <Location
+                  uuid = "08FE30A3-F6C3-4198-8855-B30E24D1F4BB - 1b04a95e23d299e2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(6) suspend resume partial function for closure #3 @Sendable () async -&gt; () in MotiFy.MusicTabViewModel.init(with: MotiFy.Dependencies) -&gt; MotiFy.MusicTabViewModel"
+                  moduleName = "MotiFy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/stuffeddanny/Library/Mobile%20Documents/com~apple~CloudDocs/Developer/MotiFy/MotiFy/MusicTab/MusicTabViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "135"
+                  endingLineNumber = "135"
+                  offsetFromSymbolStart = "68">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "383F1123-3479-4F9C-A4AD-2C445708082F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MotiFy/MusicTab/MusicTabViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "init(with:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "383F1123-3479-4F9C-A4AD-2C445708082F - fb2b1d7de0c560b0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #3 @Sendable () async -&gt; () in MotiFy.MusicTabViewModel.init(with: MotiFy.Dependencies) -&gt; MotiFy.MusicTabViewModel"
+                  moduleName = "MotiFy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/stuffeddanny/Library/Mobile%20Documents/com~apple~CloudDocs/Developer/MotiFy/MotiFy/MusicTab/MusicTabViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "142"
+                  endingLineNumber = "142"
+                  offsetFromSymbolStart = "796">
+               </Location>
+               <Location
+                  uuid = "383F1123-3479-4F9C-A4AD-2C445708082F - 6ebc3e3f3da0cc82"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for closure #3 @Sendable () async -&gt; () in MotiFy.MusicTabViewModel.init(with: MotiFy.Dependencies) -&gt; MotiFy.MusicTabViewModel"
+                  moduleName = "MotiFy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/stuffeddanny/Library/Mobile%20Documents/com~apple~CloudDocs/Developer/MotiFy/MotiFy/MusicTab/MusicTabViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "142"
+                  endingLineNumber = "142"
+                  offsetFromSymbolStart = "812">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

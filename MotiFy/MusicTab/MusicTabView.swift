@@ -233,7 +233,7 @@ struct MusicTabView: View {
     }
     
     private func FullScreenPlayer(for track: Track?) -> some View {
-        VStack {
+        ScrollView {
             ArtworkView(with: dependencies, for: track)
                 .scaledToFit()
                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -247,6 +247,7 @@ struct MusicTabView: View {
                             .padding()
                     }
                 }
+                .frame(height: 300)
                 .padding()
             
             VStack {
@@ -348,9 +349,9 @@ struct MusicTabView: View {
                     .foregroundStyle(viewModel.autoplay ? Color.accentColor : .secondary)
                 }
                 .animation(.bouncy, value: viewModel.autoplay)
-
+                
                 Spacer()
-
+                
                 Button {
                     HapticService.shared.impact(style: .light)
                     try? viewModel.prev()
@@ -408,16 +409,17 @@ struct MusicTabView: View {
             
             if let nextElement = viewModel.queue.first {
                 Text(nextElement.autoplay ? "Autoplay:" : "Next in queue:")
-                        .fontWeight(.semibold)
-                        .padding(.horizontal)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    
+                    .fontWeight(.semibold)
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
                 TrackRow(for: nextElement.track, isAnimatedWhenPlaying: false)
                     .padding(.horizontal)
                     .frame(height: 50)
-
+                
             }
         }
+        .scrollIndicators(.hidden)
         .padding()
         .background {
             ArtworkView(with: dependencies, for: track)
@@ -447,8 +449,8 @@ struct MusicTabView: View {
             
             ArtworkView(with: dependencies, for: track)
                 .scaledToFit()
-                .frame(width: 50, height: 50)
                 .clipShape(RoundedRectangle(cornerRadius: 5))
+                .frame(width: 50, height: 50)
             
             VStack(alignment: .leading) {
                 Text(track.title)
@@ -478,7 +480,7 @@ struct MusicTabView: View {
                         Circle()
                             .fill(color)
                             .frame(width: 40, height: 40)
-
+                        
                         Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
                             .font(.title2)
                             .foregroundStyle(color.contrastingTextColor())
@@ -540,7 +542,7 @@ struct MusicTabView: View {
                     }
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 5))
-            
+                .frame(width: 70, height: 70)
             
             
             VStack(alignment: .leading) {
