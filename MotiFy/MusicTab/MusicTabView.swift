@@ -158,7 +158,7 @@ struct MusicTabView: View {
             ScrollView {
                 ArtworkView(with: dependencies, for: track)
                     .scaledToFill()
-                    .frame(height: proxy.size.height * 0.4, alignment: .top)
+                    .frame(maxHeight: proxy.size.height * 0.4, alignment: .top)
                     .clipped()
                     .overlay(alignment: .bottomTrailing) {
                         Text(formattedDuration(seconds: Int(track.duration.seconds), format: .full))
@@ -183,13 +183,14 @@ struct MusicTabView: View {
                     HStack {
                         VStack(alignment: .leading) {
                             Text(track.title)
-                                .font(.title)
+                                .lineLimit(2)
+                                .font(.title2)
                                 .fontWeight(.semibold)
                             
                             Text(track.genre)
                                 .foregroundStyle(.secondary)
+                                .lineLimit(1)
                         }
-                        .lineLimit(1)
                         
                         Spacer()
                         
