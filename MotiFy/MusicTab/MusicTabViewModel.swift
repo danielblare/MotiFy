@@ -221,15 +221,17 @@ final class MusicTabViewModel: ObservableObject {
         }
     }
     
-    private func configurePlayingInfo(for track: Track) {
+    private func configureTrackInfo() {
+        guard let track = trackPlaying else { return }
         var nowPlayingInfo = [String: Any]()
         
         nowPlayingInfo[MPMediaItemPropertyTitle] = track.title
         nowPlayingInfo[MPMediaItemPropertyGenre] = track.genre
         nowPlayingInfo[MPMediaItemPropertyAssetURL] = track.audio
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = track.duration.seconds
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime().seconds
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
-
+        
 
         if let savedImage = cacheManager.getFrom(cacheManager.artWorkCache, forKey: track.id) {
             nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: savedImage.size) { _ in
@@ -249,7 +251,7 @@ final class MusicTabViewModel: ObservableObject {
             }
         }
     }
-    
+        
     func clearQueue() {
         withAnimation {
             queue.removeAll()
@@ -303,6 +305,7 @@ final class MusicTabViewModel: ObservableObject {
         Task {
             await skipTo(.zero)
             player.play()
+            configureTrackInfo()
             isPlaying = true
         }
     }
@@ -316,13 +319,14 @@ final class MusicTabViewModel: ObservableObject {
         }
         trackPlayingID = track.id
         player.play()
-        configurePlayingInfo(for: track)
+        configureTrackInfo()
         isPlaying = true
         checkAutoplay()
     }
     
     func pause() {
         player.pause()
+        configureTrackInfo()
         isPlaying = false
     }
     
@@ -345,10 +349,14 @@ final class MusicTabViewModel: ObservableObject {
     
     func skipTo(_ time: CMTime) async {
         await player.seek(to: time)
+        configureTrackInfo()
     }
     
     private func startAgain() {
-        player.seek(to: .zero)
+        Task {
+            await player.seek(to: .zero)
+            configureTrackInfo()
+        }
     }
     
     private func previousTrack() throws {
