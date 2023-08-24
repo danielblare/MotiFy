@@ -44,7 +44,7 @@ struct Track: Codable, Identifiable, Equatable, Hashable {
         self.id = model.id
         self.title = model.title
         self.genre = model.genre
-        self.description = model.description
+        self.description = model.description.replacingOccurrences(of: "%p", with: "\n")
         self.audio = audioURL
         self.artwork = artworkURL
         self.duration = try await AVURLAsset(url: audioURL).load(.duration)
@@ -56,7 +56,7 @@ struct Track: Codable, Identifiable, Equatable, Hashable {
         self.id = model.id
         self.title = model.title
         self.genre = model.genre
-        self.description = model.description
+        self.description = model.description.replacingOccurrences(of: "%p", with: "\n")
         self.audio = audioURL
         self.artwork = artworkURL
         self.duration = try await AVURLAsset(url: audioURL).load(.duration)
