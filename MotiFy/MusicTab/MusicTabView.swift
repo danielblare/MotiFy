@@ -543,7 +543,7 @@ struct MusicTabView: View {
                     }
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 5))
-                .frame(width: 70, height: 70)
+                .frame(width: 60, height: 60)
             
             
             VStack(alignment: .leading) {
