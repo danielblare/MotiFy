@@ -25,6 +25,7 @@ struct QueueElement: Equatable, Identifiable {
 final class MusicTabViewModel: ObservableObject {
     
     private let cacheManager: CacheManager
+    private let firestoreManager: FirestoreManager
     
     enum RepeatOption: Codable, Hashable {
         case dontRepeat
@@ -91,6 +92,7 @@ final class MusicTabViewModel: ObservableObject {
     init(with dependencies: Dependencies) {
         
         self.cacheManager = dependencies.cacheManager
+        self.firestoreManager = dependencies.firestoreManager
         
         self.player = AVPlayer()
         self.favorites = UserDefaults.standard.value(forKey: "favorites") as? [Track.ID] ?? []
@@ -148,6 +150,26 @@ final class MusicTabViewModel: ObservableObject {
             } catch {
                 print(error)
             }
+        }
+    }
+    
+    func refresh() async {
+        do {
+            let trackModels: [FirestoreTrackModel] = try await firestoreManager.get()
+            var tracks: [Track] = []
+            
+            for model in trackModels {
+                tracks.append(try await Track(from: model))
+            }
+            
+            if tracks != self.tracks, !tracks.isEmpty {
+                self.tracks = tracks
+                
+                let data = try JSONEncoder().encode(tracks)
+                UserDefaults.standard.setValue(data, forKey: "tracks")
+            }
+        } catch {
+            print(error)
         }
     }
     

@@ -34,64 +34,65 @@ struct MusicTabView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(viewModel.tracks.sorted(by: { $0.title < $1.title }).sorted(by: { track1, track2 in
-                    if viewModel.isFavorite(track1), viewModel.isFavorite(track2),
-                       let index1 = viewModel.favorites.firstIndex(of: track1.id),
-                       let index2 = viewModel.favorites.firstIndex(of: track2.id) {
-                        return index1 < index2
-                    } else if viewModel.isFavorite(track1) {
-                        return true
-                    } else {
-                        return false
-                    }
-                })) { track in
-                    Button {
-                        trackForDescription = track
-                    } label: {
-                        TrackRow(for: track)
-                            .frame(height: 60)
-                    }
-                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                        Button {
-                            HapticService.shared.impact(style: .medium)
-                            viewModel.addToStart(QueueElement(track: track))
-                        } label: {
-                            Image(systemName: "text.line.first.and.arrowtriangle.forward")
+            VStack(spacing: 0) {
+                List {
+                    ForEach(viewModel.tracks.sorted(by: { $0.title < $1.title }).sorted(by: { track1, track2 in
+                        if viewModel.isFavorite(track1), viewModel.isFavorite(track2),
+                           let index1 = viewModel.favorites.firstIndex(of: track1.id),
+                           let index2 = viewModel.favorites.firstIndex(of: track2.id) {
+                            return index1 < index2
+                        } else if viewModel.isFavorite(track1) {
+                            return true
+                        } else {
+                            return false
                         }
-                        .tint(.indigo)
-                        
+                    })) { track in
                         Button {
-                            HapticService.shared.impact(style: .medium)
-                            viewModel.addToEnd(QueueElement(track: track))
+                            trackForDescription = track
                         } label: {
-                            Image(systemName: "text.line.last.and.arrowtriangle.forward")
+                            TrackRow(for: track)
+                                .frame(height: 60)
                         }
-                        .tint(.orange)
-                    }
-                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                        let isFavorite = viewModel.isFavorite(track)
-                        Button {
-                            HapticService.shared.impact(style: .medium)
-                            withAnimation {
-                                viewModel.setFavorite(to: !isFavorite, for: track)
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            Button {
+                                HapticService.shared.impact(style: .medium)
+                                viewModel.addToStart(QueueElement(track: track))
+                            } label: {
+                                Image(systemName: "text.line.first.and.arrowtriangle.forward")
                             }
-                        } label: {
-                            Image(systemName: isFavorite ? "star.slash" : "star")
-                                .symbolVariant(.fill)
+                            .tint(.indigo)
+                            
+                            Button {
+                                HapticService.shared.impact(style: .medium)
+                                viewModel.addToEnd(QueueElement(track: track))
+                            } label: {
+                                Image(systemName: "text.line.last.and.arrowtriangle.forward")
+                            }
+                            .tint(.orange)
                         }
-                        .tint(.yellow)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            let isFavorite = viewModel.isFavorite(track)
+                            Button {
+                                HapticService.shared.impact(style: .medium)
+                                withAnimation {
+                                    viewModel.setFavorite(to: !isFavorite, for: track)
+                                }
+                            } label: {
+                                Image(systemName: isFavorite ? "star.slash" : "star")
+                                    .symbolVariant(.fill)
+                            }
+                            .tint(.yellow)
+                        }
                     }
                 }
-            }
-            .navigationTitle("Library")
-            .listStyle(.inset)
-            .overlay(alignment: .bottom) {
+                .listStyle(.inset)                
+                
                 if let track = viewModel.trackPlaying {
                     SmallPlayer(for: track)
                         .animation(.interactiveSpring, value: viewModel.trackPlaying)
                 }
             }
+            .navigationTitle("Library")
             .sheet(item: $trackForDescription) { track in
                 Description(for: track)
                     .presentationDetents([.medium, .large])
@@ -447,7 +448,6 @@ struct MusicTabView: View {
     
     private func SmallPlayer(for track: Track) -> some View {
         HStack {
-            
             ArtworkView(with: dependencies, for: track)
                 .scaledToFit()
                 .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -504,7 +504,7 @@ struct MusicTabView: View {
         .background {
             ArtworkView(with: dependencies, for: track)
                 .scaledToFill()
-                .blur(radius: 200)
+                .blur(radius: 150)
                 .ignoresSafeArea()
         }
         
