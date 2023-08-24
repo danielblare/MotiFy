@@ -16,7 +16,26 @@ struct FirestoreTrackModel: Codable {
     let artwork: String
     let description: String
     
+    init(id: String, title: String, genre: String, audio: String, artwork: String, description: String) {
+        self.id = id
+        self.title = title
+        self.genre = genre
+        self.audio = audio
+        self.artwork = artwork
+        self.description = description
+    }
+    
     static let testInstance = FirestoreTrackModel(id: "yKjoNS0o5YkgFSIADjPF", title: "Test Title", genre: "Test genge", audio: "https://download.xn--41a.wiki/cache/2/3db/526816593_456239896.mp3?filename=Yeat-G%C3%ABt%20Busy.mp3", artwork: "https://www.udiscovermusic.com/wp-content/uploads/2022/04/2-Alive-Geek-Pack_-Explicit-Cover-2.jpg", description: "Test description")
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.genre = try container.decode(String.self, forKey: .genre)
+        self.audio = try container.decode(String.self, forKey: .audio)
+        self.artwork = try container.decode(String.self, forKey: .artwork)
+        self.description = try container.decode(String.self, forKey: .description).replacingOccurrences(of: "%p", with: "\n")
+    }
 }
 
 struct Track: Codable, Identifiable, Equatable, Hashable {
@@ -44,7 +63,7 @@ struct Track: Codable, Identifiable, Equatable, Hashable {
         self.id = model.id
         self.title = model.title
         self.genre = model.genre
-        self.description = model.description.replacingOccurrences(of: "%p", with: "\n")
+        self.description = model.description
         self.audio = audioURL
         self.artwork = artworkURL
         self.duration = try await AVURLAsset(url: audioURL).load(.duration)
@@ -56,7 +75,7 @@ struct Track: Codable, Identifiable, Equatable, Hashable {
         self.id = model.id
         self.title = model.title
         self.genre = model.genre
-        self.description = model.description.replacingOccurrences(of: "%p", with: "\n")
+        self.description = model.description
         self.audio = audioURL
         self.artwork = artworkURL
         self.duration = try await AVURLAsset(url: audioURL).load(.duration)
