@@ -502,10 +502,13 @@ struct MusicTabView: View {
         .frame(maxWidth: .infinity)
         .padding()
         .background {
+            Color.clearButTappable
+        }
+        .background {
             ArtworkView(with: dependencies, for: track)
                 .scaledToFill()
                 .blur(radius: 150)
-                .ignoresSafeArea()
+                .allowsHitTesting(false)
         }
         
         .overlay(alignment: .top) {

@@ -25,6 +25,10 @@ extension Image {
 }
 
 extension Color {
+    
+    /// Color which is not visible but still can detect tap gesture
+    static let clearButTappable = Color.white.opacity(Double("1e-45")!)
+
     static let palette: Palette = Palette()
     
     struct Palette {
