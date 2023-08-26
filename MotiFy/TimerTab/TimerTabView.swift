@@ -7,18 +7,23 @@
 
 import SwiftUI
 
+/// A view for the Timer tab, allowing users to set and manage timers.
 struct TimerTabView: View {
     
+    /// The view model managing the Timer tab.
     @StateObject private var viewModel: TimerTabViewModel = TimerTabViewModel()
     
+    /// Flag to indicate whether the categories editor sheet should be shown.
     @State private var showCategoriesEditor: Bool = false
     
     var body: some View {
         NavigationStack {
             VStack {
                 
+                // Activity Picker or Timer Display
                 if !viewModel.showTimer {
                     Menu {
+                        // Menu items for selecting activities
                         ForEach(viewModel.activities) { activity in
                             Button {
                                 if viewModel.selectedActivity == activity {
@@ -39,6 +44,7 @@ struct TimerTabView: View {
                             Label("Edit", systemImage: "square.and.pencil")
                         }
                     } label: {
+                        // Menu label indicating selected activity
                         HStack {
                             Text("Activity: \(viewModel.selectedActivity?.name ?? "None")")
                             
@@ -49,19 +55,24 @@ struct TimerTabView: View {
                     .padding(.horizontal)
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 } else {
+                    // Timer Display
                     Text(viewModel.selectedActivity?.displayText ?? "")
                         .font(.title)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.center)
                 }
                 
+                // Time Picker or Timer Display
                 Group {
                     if viewModel.showTimer {
+                        // Timer Display
                         Text(viewModel.remainingTime.formatted)
                             .font(.system(size: 70))
                             .monospacedDigit()
                     } else {
+                        // Time Picker
                         HStack(spacing: 0) {
+                            // Hours Picker
                             Picker("Hours", selection: $viewModel.selectedTime.hours) {
                                 ForEach(0..<24) {
                                     Text("\($0)")
@@ -72,6 +83,7 @@ struct TimerTabView: View {
                                     .padding(.trailing)
                             }
                             
+                            // Minutes Picker
                             Picker("Minutes", selection: $viewModel.selectedTime.minutes) {
                                 ForEach(0..<60) {
                                     Text("\($0)")
@@ -82,6 +94,7 @@ struct TimerTabView: View {
                                     .padding(.trailing)
                             }
                             
+                            // Seconds Picker
                             Picker("Seconds", selection: $viewModel.selectedTime.seconds) {
                                 ForEach(0..<60) {
                                     Text("\($0)")
@@ -99,8 +112,8 @@ struct TimerTabView: View {
                 }
                 .frame(height: 300)
                 
+                // Timer Controls
                 HStack {
-                    
                     Button("Cancel", role: .destructive) {
                         viewModel.cancelTimer()
                     }

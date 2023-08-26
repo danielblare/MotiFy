@@ -15,6 +15,7 @@ struct MusicPlayingAnimation: View {
     private let spacing: CGFloat?
     private let cornerRadius: CGFloat
 
+    // Initialize the MusicPlayingAnimation view with properties
     init(playing: Bool, spacing: CGFloat? = nil, cornerRadius: CGFloat = 5) {
         self.playing = playing
         self.spacing = spacing
@@ -23,6 +24,7 @@ struct MusicPlayingAnimation: View {
     
     var body: some View {
         HStack(alignment: .bottom, spacing: spacing) {
+            // Create a series of RoundedRectangle views with variable heights
             ForEach(1..<5) { num in
                 GeometryReader { proxy in
                     RoundedRectangle(cornerRadius: cornerRadius)
@@ -30,18 +32,14 @@ struct MusicPlayingAnimation: View {
                 }
             }
         }
+        // Animate the view's height changes with a timer
         .onReceive(Timer.publish(every: 0.3, on: .main, in: .common).autoconnect()) { _ in
             withAnimation(.linear) {
                 animate.toggle()
             }
         }
+        // Rotate the entire view by 180 degrees
         .rotationEffect(.degrees(180))
-//        .onAppear {
-//            withAnimation(.linear(duration: 0.3).repeatForever()) {
-////                height = 0.2
-//                animate = true
-//            }
-//        }
     }
 }
 

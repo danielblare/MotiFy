@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB0072D22A995028008ED16F /* QueueElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0072D12A995028008ED16F /* QueueElement.swift */; };
 		BB31BCA52A82A76C007DBF67 /* CMTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB31BCA42A82A76C007DBF67 /* CMTime.swift */; };
 		BB3428CE2A8112B200243DDA /* MusicTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3428CD2A8112B200243DDA /* MusicTabView.swift */; };
 		BB34F5202A891B880012EB53 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB34F51F2A891B880012EB53 /* Launch Screen.storyboard */; };
@@ -84,6 +85,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BB0072D12A995028008ED16F /* QueueElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueElement.swift; sourceTree = "<group>"; };
 		BB31BCA42A82A76C007DBF67 /* CMTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTime.swift; sourceTree = "<group>"; };
 		BB3428CD2A8112B200243DDA /* MusicTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabView.swift; sourceTree = "<group>"; };
 		BB34F51F2A891B880012EB53 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -174,36 +176,6 @@
 			path = Launch;
 			sourceTree = "<group>";
 		};
-		BB34F5272A8933EC0012EB53 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-				BB34F5282A8933ED0012EB53 /* New Group */,
-			);
-			path = "New Group";
-			sourceTree = "<group>";
-		};
-		BB34F5282A8933ED0012EB53 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
-			sourceTree = "<group>";
-		};
-		BB34F5292A8933EF0012EB53 /* New Group1 */ = {
-			isa = PBXGroup;
-			children = (
-				BB34F52A2A8933F10012EB53 /* New Group */,
-			);
-			path = "New Group1";
-			sourceTree = "<group>";
-		};
-		BB34F52A2A8933F10012EB53 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
-			sourceTree = "<group>";
-		};
 		BB3563D42A81508400D56250 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -286,8 +258,6 @@
 				BB7300E42A7C45B0006A7020 /* MotiFyApp.swift */,
 				BB7300E62A7C45B0006A7020 /* ContentView.swift */,
 				BB7300E82A7C45B2006A7020 /* Assets.xcassets */,
-				BB34F5292A8933EF0012EB53 /* New Group1 */,
-				BB34F5272A8933EC0012EB53 /* New Group */,
 				BB7300EA2A7C45B2006A7020 /* Preview Content */,
 			);
 			path = MotiFy;
@@ -338,6 +308,7 @@
 				BB65B69D2A85350700B37405 /* Track.swift */,
 				BB9EC4052A8D2210004F1367 /* Activity.swift */,
 				BBA843482A8E7F9B00DD0D80 /* Time.swift */,
+				BB0072D12A995028008ED16F /* QueueElement.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -493,6 +464,7 @@
 				BB65B69E2A85350700B37405 /* Track.swift in Sources */,
 				BBA191472A7FCD3400B01E46 /* Color.swift in Sources */,
 				BB7300E72A7C45B0006A7020 /* ContentView.swift in Sources */,
+				BB0072D22A995028008ED16F /* QueueElement.swift in Sources */,
 				BBE2B56A2A7D88F500264BF5 /* View.swift in Sources */,
 				BB9EC4082A8D2234004F1367 /* TimerTabViewModel.swift in Sources */,
 				BBFA4E4F2A8D699C00CEFDC4 /* ActivityEditor.swift in Sources */,

@@ -17,8 +17,8 @@ struct Blob: View {
     @State private var velocity: CGPoint
     private let BlobImage: Image
     private let staticView: Bool
-
-
+    
+    // Initialize the Blob view with properties
     init(screenSize: CGSize, blobSize: CGFloat, staticView: Bool) {
         self.screenSize = screenSize
         self.blobSize = blobSize
@@ -30,36 +30,41 @@ struct Blob: View {
         self.rotation = .degrees(.random(in: 0...360))
         self.staticView = staticView
     }
-
+    
     var body: some View {
-       BlobImage
+        BlobImage
             .resizable()
             .scaledToFit()
             .frame(width: blobSize, height: blobSize)
             .rotationEffect(rotation)
             .position(position)
             .onAppear() {
+                // Initialize the position and velocity when the view appears
                 self.position = self.startPosition
                 self.velocity = self.startVelocity
             }
             .onReceive(Timer.publish(every: 1.0 / 60.0, on: .main, in: .common).autoconnect()) { _ in
                 if !staticView {
+                    // Update the position based on velocity over time
                     self.updatePosition()
                 }
             }
     }
-
+    
     private func updatePosition() {
+        // Calculate the new position based on the current position and velocity
         var newPosition = CGPoint(
             x: self.position.x + self.velocity.x,
             y: self.position.y + self.velocity.y
         )
-
+        
+        // If the blob goes off the bottom of the screen, reset its position and velocity
         if newPosition.y - blobSize / 2 > screenSize.height {
             newPosition = CGPoint(x: -CGFloat.random(in: 0...screenSize.width/2), y: -CGFloat.random(in: 0...screenSize.height/2))
             velocity = CGPoint(x: CGFloat.random(in: 0.1...2), y: CGFloat.random(in: 0.5...1.5))
         }
-
+        
+        // Update the position state
         self.position = newPosition
     }
 }
@@ -70,6 +75,7 @@ struct FancyBackground: View {
     private let randomOpacity: Bool
     private let staticView: Bool
     
+    // Initialize the FancyBackground view with properties
     init(blobSize: CGFloat = 60, quantity: Int = 25, randomOpacity: Bool = true, staticView: Bool = false) {
         self.blobSize = blobSize
         self.quantity = quantity
@@ -80,6 +86,7 @@ struct FancyBackground: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack {
+                // Create a dynamic background with a specified number of blobs
                 ForEach(0..<quantity) { _ in
                     Blob(screenSize: proxy.size, blobSize: blobSize, staticView: staticView)
                         .opacity(randomOpacity ? Double.random(in: 0.1...0.8) : 1)

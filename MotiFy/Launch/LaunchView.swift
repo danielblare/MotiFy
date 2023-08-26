@@ -10,8 +10,14 @@ import SwiftUI
 struct LaunchView: View {
     
     @Binding private var showLaunchView: Bool
+    
+    /// Scale factor of logo image
     @State private var logoScale: Double = 1
+    
+    /// Scale factor of blobs image
     @State private var blobsScale: Double = 1
+    
+    /// Blobs image rotation
     @State private var rotation: Angle = .zero
     
     init(_ showLaunchView: Binding<Bool>) {
@@ -37,29 +43,34 @@ struct LaunchView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .background(Color.background)
         .task {
+            // Initial delay
             try? await Task.sleep(for: .seconds(0.3))
             
+            // Logo 1st pulse
             withAnimation(.bouncy(duration: 0.4)) {
                 logoScale = 1.1
             }
             try? await Task.sleep(for: .seconds(0.6))
             
+            // Logo explosion
             withAnimation(.bouncy(duration: 0.2, extraBounce: 0.4)) {
                 logoScale = 1.5
             }
             
+            // Wave
             withAnimation(.bouncy(duration: 0.6, extraBounce: 0.4)) {
                 blobsScale = 3
                 rotation = .degrees(90)
             }
-            
             try? await Task.sleep(for: .seconds(1))
             
+            // Logo disappearing
             withAnimation(.smooth(duration: 0.2)) {
                 logoScale = 0
             }
             try? await Task.sleep(for: .seconds(0.3))
             
+            // Dismissing launch screen
             withAnimation {
                 showLaunchView = false
             }
