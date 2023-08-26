@@ -18,7 +18,7 @@ struct LoadingBouncyView: View {
     private let timeInterval: TimeInterval
     
     // Initialize the view with a given time interval
-    init(timeInterval: TimeInterval) {
+    init(timeInterval: TimeInterval = 0.3) {
         self.timeInterval = timeInterval
     }
 

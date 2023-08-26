@@ -51,71 +51,86 @@ struct MusicTabView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                List {
-                    // Display tracks in a sorted order.
-                    ForEach(viewModel.tracks.sorted(by: { $0.title < $1.title }).sorted(by: { track1, track2 in
-                        if viewModel.isFavorite(track1), viewModel.isFavorite(track2),
-                           let index1 = viewModel.favorites.firstIndex(of: track1.id),
-                           let index2 = viewModel.favorites.firstIndex(of: track2.id) {
-                            return index1 < index2
-                        } else if viewModel.isFavorite(track1) {
-                            return true
+                if viewModel.tracks.isEmpty {
+                    Group {
+                        if viewModel.isLoading {
+                            VStack(spacing: 50) {
+                                Text("We are downloading tracks for you")
+                                    .font(.title2)
+                                LoadingBouncyView()
+                            }
                         } else {
-                            return false
-                        }
-                    })) { track in
-                        // Button to show track description when tapped.
-                        Button {
-                            trackForDescription = track
-                        } label: {
-                            // Display a TrackRow for each track.
-                            TrackRow(for: track)
-                                .frame(height: 60)
-                        }
-                        // Leading swipe actions.
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            // Button to add the track to the start of the queue.
-                            Button {
-                                HapticService.shared.impact(style: .medium)
-                                viewModel.addToStart(QueueElement(track: track))
-                            } label: {
-                                Image(systemName: "text.line.first.and.arrowtriangle.forward")
-                            }
-                            .tint(.indigo)
-                            
-                            // Button to add the track to the end of the queue.
-                            Button {
-                                HapticService.shared.impact(style: .medium)
-                                viewModel.addToEnd(QueueElement(track: track))
-                            } label: {
-                                Image(systemName: "text.line.last.and.arrowtriangle.forward")
-                            }
-                            .tint(.orange)
-                        }
-                        // Trailing swipe actions.
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            let isFavorite = viewModel.isFavorite(track)
-                            
-                            // Button to toggle favorite status.
-                            Button {
-                                HapticService.shared.impact(style: .medium)
-                                withAnimation {
-                                    viewModel.setFavorite(to: !isFavorite, for: track)
-                                }
-                            } label: {
-                                Image(systemName: isFavorite ? "star.slash" : "star")
-                                    .symbolVariant(.fill)
-                            }
-                            .tint(.yellow)
+                            Text("Library is empty")
+                                .font(.title)
                         }
                     }
-                }
-                
-                .listStyle(.inset)
-                
-                if let track = viewModel.trackPlaying {
-                    SmallPlayer(for: track)
-                        .animation(.interactiveSpring, value: viewModel.trackPlaying)
+                        .foregroundStyle(.secondary)
+                } else {
+                    List {
+                        // Display tracks in a sorted order.
+                        ForEach(viewModel.tracks.sorted(by: { $0.title < $1.title }).sorted(by: { track1, track2 in
+                            if viewModel.isFavorite(track1), viewModel.isFavorite(track2),
+                               let index1 = viewModel.favorites.firstIndex(of: track1.id),
+                               let index2 = viewModel.favorites.firstIndex(of: track2.id) {
+                                return index1 < index2
+                            } else if viewModel.isFavorite(track1) {
+                                return true
+                            } else {
+                                return false
+                            }
+                        })) { track in
+                            // Button to show track description when tapped.
+                            Button {
+                                trackForDescription = track
+                            } label: {
+                                // Display a TrackRow for each track.
+                                TrackRow(for: track)
+                                    .frame(height: 60)
+                            }
+                            // Leading swipe actions.
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                // Button to add the track to the start of the queue.
+                                Button {
+                                    HapticService.shared.impact(style: .medium)
+                                    viewModel.addToStart(QueueElement(track: track))
+                                } label: {
+                                    Image(systemName: "text.line.first.and.arrowtriangle.forward")
+                                }
+                                .tint(.indigo)
+                                
+                                // Button to add the track to the end of the queue.
+                                Button {
+                                    HapticService.shared.impact(style: .medium)
+                                    viewModel.addToEnd(QueueElement(track: track))
+                                } label: {
+                                    Image(systemName: "text.line.last.and.arrowtriangle.forward")
+                                }
+                                .tint(.orange)
+                            }
+                            // Trailing swipe actions.
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                let isFavorite = viewModel.isFavorite(track)
+                                
+                                // Button to toggle favorite status.
+                                Button {
+                                    HapticService.shared.impact(style: .medium)
+                                    withAnimation {
+                                        viewModel.setFavorite(to: !isFavorite, for: track)
+                                    }
+                                } label: {
+                                    Image(systemName: isFavorite ? "star.slash" : "star")
+                                        .symbolVariant(.fill)
+                                }
+                                .tint(.yellow)
+                            }
+                        }
+                    }
+                    .listStyle(.inset)
+                    
+                    if let track = viewModel.trackPlaying {
+                        SmallPlayer(for: track)
+                            .animation(.interactiveSpring, value: viewModel.trackPlaying)
+                    }
                 }
             }
             .navigationTitle("Library")

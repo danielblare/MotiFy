@@ -89,6 +89,8 @@ final class MusicTabViewModel: ObservableObject {
         }
     }
     
+    @Published private(set) var isLoading: Bool = false
+    
     /// Computed property to retrieve the currently playing Track based on its ID.
     var trackPlaying: Track? {
         self.tracks.first(where: { $0.id == trackPlayingID })
@@ -154,6 +156,10 @@ final class MusicTabViewModel: ObservableObject {
         // Fetch track data from Firestore and initialize Track objects
         Task {
             do {
+                isLoading = true
+                
+                defer { isLoading = false }
+                
                 let trackModels: [FirestoreTrackModel] = try await dependencies.firestoreManager.get()
                 var tracks: [Track] = []
                 
