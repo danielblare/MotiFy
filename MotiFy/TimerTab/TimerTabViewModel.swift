@@ -24,7 +24,11 @@ final class TimerTabViewModel: ObservableObject {
     @Published var selectedTime: Time = .init()
     
     /// The remaining time on the timer.
-    @Published private(set) var remainingTime: Time = .init()
+    @Published private(set) var remainingTime: Time = .init() {
+        didSet {
+            print(remainingTime)
+        }
+    }
     
     /// The ID of the selected activity.
     @Published private var selectedActivityID: Activity.ID? {
@@ -103,6 +107,9 @@ final class TimerTabViewModel: ObservableObject {
         
         // Register for background notification
         NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        
+        // Register for foreground notification
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     /// Notifies the view model that the view is disappearing.
@@ -114,16 +121,40 @@ final class TimerTabViewModel: ObservableObject {
     func appearing() {
         onScreen = true
         badge = 0
+        NotificationService.shared.removeAllDeliveredNotifications()
+    }
+    
+    @objc private func appWillEnterForeground() {
+        print("foregrounding")
+        NotificationService.shared.removeAllPendingNotifications()
+        
+        if let backgroundTime = UserDefaults.standard.object(forKey: "BackgroundTime") as? Date,
+           let storedRemainingTime = UserDefaults.standard.object(forKey: "RemainingTime") as? TimeInterval {
+            
+            let timeInBackground = Date().timeIntervalSince(backgroundTime)
+            let updatedRemainingTime = max(storedRemainingTime - timeInBackground, 0)
+            
+            if updatedRemainingTime > 0 {
+                remainingTime = Time(from: updatedRemainingTime)
+            } else {
+                cancelTimer()
+            }
+            
+            UserDefaults.standard.removeObject(forKey: "BackgroundTime")
+            UserDefaults.standard.removeObject(forKey: "RemainingTime")
+        }
     }
     
     /// Handles the app entering the background by saving timer state and scheduling notifications.
     @objc private func appDidEnterBackground() {
+        print("backgrounding")
         if isTimerRunning {
             UserDefaults.standard.set(Date(), forKey: "BackgroundTime")
             UserDefaults.standard.set(remainingTime.timeInterval, forKey: "RemainingTime")
             
             let date = Date().addingTimeInterval(remainingTime.timeInterval)
             Task {
+                NotificationService.shared.removeAllPendingNotifications()
                 try? await NotificationService.shared.scheduleNotification(for: date, activity: selectedActivity)
             }
         }

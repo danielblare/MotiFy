@@ -3,4 +3,54 @@
    uuid = "0CAD8FD3-44C5-4DE3-9AE8-6464FF5C265E"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "245D7C07-4684-4CDD-B1D1-C7AED5A0435B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MotiFy/TimerTab/TimerTabViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "init()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "245D7C07-4684-4CDD-B1D1-C7AED5A0435B - 80ad2165cce5c4d6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MotiFy.TimerTabViewModel.init() -&gt; MotiFy.TimerTabViewModel"
+                  moduleName = "MotiFy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/stuffeddanny/Library/Mobile%20Documents/com~apple~CloudDocs/Developer/MotiFy/MotiFy/TimerTab/TimerTabViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
+                  offsetFromSymbolStart = "3864">
+               </Location>
+               <Location
+                  uuid = "245D7C07-4684-4CDD-B1D1-C7AED5A0435B - 80ad2165cce5c4d6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MotiFy.TimerTabViewModel.init() -&gt; MotiFy.TimerTabViewModel"
+                  moduleName = "MotiFy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/stuffeddanny/Library/Mobile%20Documents/com~apple~CloudDocs/Developer/MotiFy/MotiFy/TimerTab/TimerTabViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
+                  offsetFromSymbolStart = "2840">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
