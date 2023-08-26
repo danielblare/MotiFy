@@ -284,7 +284,7 @@ struct MusicTabView: View {
     /// - Parameter track: The track being played in the full-screen player.
     /// - Returns: A view presenting track information and player controls.
     private func FullScreenPlayer(for track: Track?) -> some View {
-        ScrollView {
+        VStack {
             // Display the artwork of the track.
             ArtworkView(with: dependencies, for: track)
                 .scaledToFit()
@@ -308,10 +308,11 @@ struct MusicTabView: View {
                 Text(track?.title ?? "-")
                     .font(.title)
                     .fontWeight(.semibold)
+                    .foregroundStyle(.white)
                 
                 // Display the track author.
                 Text(track?.author ?? "-")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.8))
                     .font(.title3)
             }
             .lineLimit(1)
@@ -321,12 +322,12 @@ struct MusicTabView: View {
                 // Display the timeline for dragging and seeking.
                 ZStack(alignment: .leading) {
                     Rectangle()
-                        .fill(.secondary.opacity(0.3))
+                        .fill(.white.opacity(0.5))
                     
                     if let track {
                         GeometryReader { proxy in
                             Rectangle()
-                                .fill(isDragging ? .primary : .secondary)
+                                .fill(isDragging ? .white : .white.opacity(0.8))
                                 .frame(width: proxy.size.width / (track.duration.seconds / (isDragging ? draggingTimeSeconds : viewModel.currentTime.seconds)))
                                 .onChange(of: proxy.size) { newSize in
                                     dragTimelineWidth = newSize.width
@@ -376,7 +377,8 @@ struct MusicTabView: View {
                     Text(timeline.left)
                 }
                 .monospacedDigit()
-                .foregroundStyle(isDragging ? .primary : .secondary)
+                .foregroundStyle(isDragging ? .white : .white.opacity(0.5))
+                .fontWeight(isDragging ? .semibold : .regular)
                 .font(.footnote)
                 .padding(.horizontal, 5)
                 
@@ -384,7 +386,7 @@ struct MusicTabView: View {
             .frame(minHeight: 40)
             .padding()
             .scaleEffect(isDragging ? 1.03 : 1)
-            .animation(.snappy(), value: isDragging)
+            .animation(.snappy(duration: 0.3), value: isDragging)
             
             // Playback controls.
             HStack {
@@ -401,49 +403,44 @@ struct MusicTabView: View {
                         Image(systemName: "play.fill")
                             .font(.caption2)
                     }
-                    .foregroundStyle(viewModel.autoplay ? Color.accentColor : .secondary)
+                    .foregroundStyle(viewModel.autoplay ? Color.accentColor : .white.opacity(0.5))
                 }
                 .animation(.bouncy, value: viewModel.autoplay)
                 
                 Spacer()
                 
-                // Previous track button.
-                Button {
-                    HapticService.shared.impact(style: .light)
-                    try? viewModel.prev()
-                } label: {
-                    Image(systemName: "backward.fill")
-                        .foregroundStyle(Color.primary)
-                        .font(.title2)
-                }
-                
-                // Play/pause button.
-                Button {
-                    if let track {
+                Group {
+                    // Previous track button.
+                    Button {
                         HapticService.shared.impact(style: .light)
-                        viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
+                        try? viewModel.prev()
+                    } label: {
+                        Image(systemName: "backward.fill")
+                            .font(.title2)
                     }
-                } label: {
-                    ZStack {
-                        let color: Color = .accentColor
-                        Circle().fill(color)
+                    
+                    // Play/pause button.
+                    Button {
+                        if let track {
+                            HapticService.shared.impact(style: .light)
+                            viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
+                        }
+                    } label: {
                         Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
                             .font(.system(size: 40))
-                            .foregroundStyle(color.contrastingTextColor())
                     }
-                    .frame(width: 70, height: 70)
+                    .padding(.horizontal)
+                    
+                    // Next track button.
+                    Button {
+                        HapticService.shared.impact(style: .light)
+                        try? viewModel.next()
+                    } label: {
+                        Image(systemName: "forward.fill")
+                            .font(.title2)
+                    }
                 }
-                .padding(.horizontal)
-                
-                // Next track button.
-                Button {
-                    HapticService.shared.impact(style: .light)
-                    try? viewModel.next()
-                } label: {
-                    Image(systemName: "forward.fill")
-                        .foregroundStyle(Color.primary)
-                        .font(.title2)
-                }
+                .foregroundStyle(.white)
                 
                 Spacer()
                 
@@ -454,27 +451,29 @@ struct MusicTabView: View {
                 } label: {
                     viewModel.repeatOption.icon
                         .font(.title2)
-                        .foregroundStyle(viewModel.repeatOption == .dontRepeat ? Color.secondary : .accent)
+                        .foregroundStyle(viewModel.repeatOption == .dontRepeat ? .white.opacity(0.5) : .accent)
                 }
             }
             .padding(.horizontal)
             .disabled(track == nil)
             
-            Spacer(minLength: 0)
+            Spacer()
             
             // Display the next track or autoplay indicator.
             if let nextElement = viewModel.queue.first {
-                Text(nextElement.autoplay ? "Autoplay:" : "Next in queue:")
-                    .fontWeight(.semibold)
-                    .padding(.horizontal)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                TrackRow(for: nextElement.track, isAnimatedWhenPlaying: false)
-                    .padding(.horizontal)
-                    .frame(height: 50)
+                Group {
+                    Text(nextElement.autoplay ? "Autoplay:" : "Next in queue:")
+                        .fontWeight(.semibold)
+                        .padding(.horizontal)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    TrackRow(for: nextElement.track, isAnimatedWhenPlaying: false)
+                        .padding(.horizontal)
+                        .frame(height: 50)
+                }
+                .foregroundStyle(.white)
             }
         }
-        .scrollIndicators(.hidden)
         .padding()
         .background {
             // Display a blurred version of the artwork as the background.
@@ -539,24 +538,14 @@ struct MusicTabView: View {
                 } label: {
                     Image(systemName: "backward.fill")
                         .font(.body)
-                        .foregroundStyle(Color.primary)
                 }
                 
                 // Button to play/pause the current track.
                 Button {
                     viewModel.isPlaying ? viewModel.pause() : viewModel.play(track)
                 } label: {
-                    ZStack {
-                        let color: Color = .accentColor
-                        
-                        Circle()
-                            .fill(color)
-                            .frame(width: 40, height: 40)
-                        
-                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                            .font(.title2)
-                            .foregroundStyle(color.contrastingTextColor())
-                    }
+                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                        .font(.title)
                 }
                 
                 // Button to play the next track.
@@ -565,9 +554,9 @@ struct MusicTabView: View {
                 } label: {
                     Image(systemName: "forward.fill")
                         .font(.body)
-                        .foregroundStyle(Color.primary)
                 }
             }
+            .foregroundStyle(.primary)
             .padding(.leading)
         }
         .frame(maxWidth: .infinity)
@@ -587,7 +576,7 @@ struct MusicTabView: View {
         .overlay(alignment: .top) {
             ZStack(alignment: .top) {
                 Rectangle()
-                    .fill(.secondary.opacity(0.3))
+                    .fill(.white.opacity(0.3))
                 
                 GeometryReader { proxy in
                     Rectangle()
@@ -605,7 +594,7 @@ struct MusicTabView: View {
             showFullScreenPlayer = true
         }
     }
-
+    
     /// Generates a view representing a track in a list.
     /// - Parameters:
     ///   - track: The track to be displayed in the row.
@@ -649,7 +638,7 @@ struct MusicTabView: View {
         // Apply animation when the playing state changes.
         .animation(.easeOut, value: viewModel.isPlaying)
     }
-
+    
     /// Enumeration to specify different time format options.
     private enum Format {
         case hours
@@ -668,7 +657,7 @@ struct MusicTabView: View {
             }
         }
     }
-
+    
     /// Formats a given duration in seconds into a human-readable time format.
     /// - Parameters:
     ///   - seconds: The duration in seconds.
@@ -689,7 +678,7 @@ struct MusicTabView: View {
         // Format the duration using the specified string format.
         return String(format: format.stringFormat, arguments: arguments)
     }
-
+    
 }
 
 #Preview {
