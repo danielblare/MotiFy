@@ -9,6 +9,16 @@ Elevate your productivity and motivation with MotiFy. Seamlessly designed to emp
 - Smart Timer and Activities: Master your time management effortlessly. Customize tasks with preset timers that keep you focused, organized, and in control. Whether it's work, study, or personal goals, reach your full potential without losing track of time.
 - Lofi Music Library: Transform your workspace with the power of music. Dive into a library of handpicked Lofi tracks, meticulously chosen to enhance your concentration, relaxation, and motivation. Create your ideal ambiance and amplify your productivity.
 
+## Code features
+- API Requests to fetch new quote every day
+- Custom activities saving
+- Designed and implemented custom timer
+- AVKit with MPRemoteCommandCenter for full experience music player with fully written logic like queue creation/editing, autoplay, repeat options, ability to skip etc
+- Fetching music library from backend servise (FirebaseFirestore)
+- Artwork component for saving image to cache when fetched once
+- Various custom components/extensions/managers that can be reused
+- Push Notifications to notify user when time is up
+  
 ## Screenshots
 
 <div>
